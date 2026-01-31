@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>POS System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 flex items-center justify-center min-h-screen">
+    <div class="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Point of Sale</h1>
+            <p class="text-gray-500 mt-2">Masuk untuk memulai sesi Anda</p>
+        </div>
+
+        <div class="space-y-4">
+            <a href="/admin/login" class="block w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 px-4 rounded-lg text-center transition duration-200">
+                Login Aplikasi
+            </a>
+
+            <div class="mt-6 text-center text-sm text-gray-400">
+                &copy; {{ date('Y') }} POS System. All rights reserved.
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
