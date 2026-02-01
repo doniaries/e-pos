@@ -184,7 +184,8 @@ class ProdukResource extends Resource
                                                     ->default(0)
                                                     ->required()
                                                     ->minValue(0)
-                                                    ->helperText('Masukan stok awal jika ada'),
+                                                    ->helperText('Masukan stok awal jika ada')
+                                                    ->hiddenOn('edit'),
 
                                                 Forms\Components\Hidden::make('stok_minimum')
                                                     ->default(1),
