@@ -3,10 +3,10 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\Stok;
+use App\Models\Pembelian;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class StokPolicy
+class PembelianPolicy
 {
     use HandlesAuthorization;
 
@@ -15,15 +15,15 @@ class StokPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->can('view_any_stok');
+        return $user->can('view_any_pembelian');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Stok $stok): bool
+    public function view(User $user, Pembelian $pembelian): bool
     {
-        return $user->can('view_stok');
+        return $user->can('view_pembelian');
     }
 
     /**
@@ -31,23 +31,23 @@ class StokPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create_stok');
+        return $user->can('create_pembelian');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Stok $stok): bool
+    public function update(User $user, Pembelian $pembelian): bool
     {
-        return $user->can('update_stok');
+        return $user->can('update_pembelian');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Stok $stok): bool
+    public function delete(User $user, Pembelian $pembelian): bool
     {
-        return $user->can('delete_stok');
+        return $user->can('delete_pembelian');
     }
 
     /**
@@ -55,15 +55,15 @@ class StokPolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_stok');
+        return $user->can('delete_any_pembelian');
     }
 
     /**
      * Determine whether the user can permanently delete.
      */
-    public function forceDelete(User $user, Stok $stok): bool
+    public function forceDelete(User $user, Pembelian $pembelian): bool
     {
-        return $user->can('force_delete_stok');
+        return $user->can('force_delete_pembelian');
     }
 
     /**
@@ -71,15 +71,15 @@ class StokPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_stok');
+        return $user->can('force_delete_any_pembelian');
     }
 
     /**
      * Determine whether the user can restore.
      */
-    public function restore(User $user, Stok $stok): bool
+    public function restore(User $user, Pembelian $pembelian): bool
     {
-        return $user->can('restore_stok');
+        return $user->can('restore_pembelian');
     }
 
     /**
@@ -87,15 +87,15 @@ class StokPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_stok');
+        return $user->can('restore_any_pembelian');
     }
 
     /**
      * Determine whether the user can replicate.
      */
-    public function replicate(User $user, Stok $stok): bool
+    public function replicate(User $user, Pembelian $pembelian): bool
     {
-        return $user->can('replicate_stok');
+        return $user->can('replicate_pembelian');
     }
 
     /**
@@ -103,6 +103,6 @@ class StokPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_stok');
+        return $user->can('reorder_pembelian');
     }
 }
