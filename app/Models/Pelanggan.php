@@ -21,11 +21,13 @@ class Pelanggan extends Model
         'kontak',
         'alamat',
         'hutang',
+        'tanggal_hutang_terakhir',
         'tanggal_bergabung',
     ];
 
     protected $casts = [
         'hutang' => 'decimal:0',
+        'tanggal_hutang_terakhir' => 'datetime',
         'tanggal_bergabung' => 'date',
     ];
 
@@ -94,5 +96,10 @@ class Pelanggan extends Model
     public function pembayaranHutang()
     {
         return $this->hasMany(PembayaranHutangMember::class, 'pelanggan_id');
+    }
+
+    public function penjualans()
+    {
+        return $this->hasMany(Penjualan::class, 'pelanggan_id');
     }
 }

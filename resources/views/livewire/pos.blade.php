@@ -62,7 +62,7 @@
             this.$watch('showPendingModal', value => { if(!value) { this.isProcessing = false; Livewire.dispatch('modal-closed'); } });
             this.$watch('showProductTable', value => { if(!value) { this.isProcessing = false; Livewire.dispatch('modal-closed'); } });
             this.$watch('showCloseDayModal', value => { if(!value) { this.isProcessing = false; Livewire.dispatch('modal-closed'); } });
-            this.$watch('showPaymentModal', value => { if(!value) { this.isProcessing = false; } });
+            this.$watch('showPaymentModal', value => { if(!value) { this.isProcessing = false; Livewire.dispatch('modal-closed'); } });
         }
     }"
     @keydown.window.f2.prevent="showProductTable = !showProductTable"

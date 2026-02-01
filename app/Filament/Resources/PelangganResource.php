@@ -3,10 +3,10 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PelangganResource\Pages;
-use App\Filament\Resources\PelangganResource\RelationManagers;
-use App\Filament\Resources\PelangganResource\RelationManagers\PembayaranHutangRelationManager;
 use App\Models\Pelanggan;
 use App\Models\PembayaranHutangMember;
+use App\Filament\Resources\PelangganResource\RelationManagers\PembayaranHutangRelationManager;
+use App\Filament\Resources\PelangganResource\RelationManagers\PenjualansRelationManager;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -113,12 +113,13 @@ class PelangganResource extends Resource
                             ->formatStateUsing(fn($state) => number_format($state, 0, ',', '.') . ',-')
                     ])
                     ->sortable(),
-                Tables\Columns\TextColumn::make('tanggal_bergabung')
-                    ->label('Join Date')
-                    ->date('d/m/Y')
+                Tables\Columns\TextColumn::make('tanggal_hutang_terakhir')
+                    ->label('Tgl Hutang Terakhir')
+                    ->dateTime('d/m/Y H:i')
+                    ->placeholder('-')
                     ->sortable(),
             ])
-            ->defaultSort('created_at', 'desc')
+            ->defaultSort('tanggal_hutang_terakhir', 'desc')
             ->filters([
                 Tables\Filters\Filter::make('mempunyai_hutang')
                     ->label('Hanya Yang Berhutang')
@@ -224,6 +225,7 @@ class PelangganResource extends Resource
     public static function getRelations(): array
     {
         return [
+            PenjualansRelationManager::class,
             PembayaranHutangRelationManager::class,
         ];
     }

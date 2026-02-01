@@ -12,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('pelanggans', function (Blueprint $table) {
-            $table->string('kode_member')->nullable()->unique()->after('id');
-            $table->date('tanggal_bergabung')->nullable()->after('kontak')->default(now());
+            $table->timestamp('tanggal_hutang_terakhir')->nullable()->after('hutang');
         });
     }
 
@@ -23,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('pelanggans', function (Blueprint $table) {
-            $table->dropColumn(['kode_member', 'tanggal_bergabung']);
+            $table->dropColumn('tanggal_hutang_terakhir');
         });
     }
 };

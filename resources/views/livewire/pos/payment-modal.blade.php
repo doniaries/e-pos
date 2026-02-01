@@ -1,14 +1,39 @@
 @if ($showPaymentModal)
-<div class="fixed inset-0 z-[100] flex items-center justify-center p-4" role="dialog" aria-modal="true">
-    <div class="fixed inset-0 transition-opacity bg-gray-900 bg-opacity-90" @click="$wire.closePaymentModal()"></div>
+<div class="fixed inset-0 z-[100] grid place-items-center p-4 sm:p-6 overflow-y-auto" role="dialog" aria-modal="true">
+    <!-- Overlay backdrop -->
+    <div class="fixed inset-0 bg-gray-900/90" @click="$wire.closePaymentModal()"></div>
 
-    <div class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl transform transition-all w-full max-w-6xl border border-gray-100 dark:border-gray-700">
+    <!-- Modal Panel -->
+    <div class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-4xl border border-gray-100 dark:border-gray-700 my-auto"
+        x-data="{
+            isProcessing: false,
+            payment: @entangle('payment').live,
+            total: @entangle('grandTotal'),
+            customerType: @entangle('customerType').live,
+            customer: @entangle('customer').live,
+            paymentMode: 'hutang',
+            get isMember() { return this.customerType === 'pelanggan' && this.customer; },
+            get change() { return this.payment - this.total; },
+            formatNumber(v) { 
+                return v ? parseInt(v.toString().replace(/[^0-9]/g, '')).toLocaleString('id-ID') : '0'; 
+            },
+            updatePayment(e) { 
+                let raw = e.target.value.replace(/[^0-9]/g, '');
+                this.payment = raw ? parseInt(raw) : 0;
+            },
+            init() {
+                this.isProcessing = false;
+                this.paymentMode = this.payment > 0 ? 'bayar' : 'hutang';
+                Livewire.on('transaction-success', () => { this.isProcessing = false; });
+                Livewire.on('pos-error', () => { this.isProcessing = false; });
+            }
+        }">
         <!-- Header -->
         <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 border-b dark:border-gray-700">
             <div class="flex justify-between items-center">
                 <h3 class="text-xl font-bold text-white flex items-center gap-2">
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
                     Pembayaran
                 </h3>
@@ -20,8 +45,8 @@
             </div>
         </div>
 
-        <!-- Content (No Scroll) -->
-        <div class="px-8 py-4">
+        <!-- Content (Scrollable) -->
+        <div class="px-8 py-4 max-h-[calc(100vh-12rem)] overflow-y-auto">
             <!-- Total Belanja -->
             <div class="mb-3">
                 <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1.5">Jumlah Belanja</label>
@@ -129,17 +154,17 @@
 
                 {{-- Member Payment Mode Selection --}}
                 @if ($customerType === 'pelanggan' && $customer)
-                <div class="col-span-2 mb-4" x-data="{ paymentMode: @entangle('payment').live > 0 ? 'bayar' : 'hutang' }">
+                <div class="col-span-2 mb-4" x-id="['payment-mode']">
                     <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Mode Pembayaran Member</label>
                     <div class="grid grid-cols-2 gap-3">
                         <button type="button"
-                            @click="paymentMode = 'hutang'; $wire.set('payment', 0)"
+                            @click="payment = 0; paymentMode = 'hutang'"
                             :class="paymentMode === 'hutang' ? 'bg-red-500 text-white border-red-600' : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600'"
                             class="px-4 py-4 rounded-xl border-2 transition-all font-bold flex items-center justify-center gap-2 hover:scale-105">
                             <span>💳 Hutang Penuh</span>
                         </button>
                         <button type="button"
-                            @click="paymentMode = 'bayar'; if($wire.payment === 0) $wire.set('payment', $wire.grandTotal)"
+                            @click="paymentMode = 'bayar'"
                             :class="paymentMode === 'bayar' ? 'bg-green-500 text-white border-green-600' : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600'"
                             class="px-4 py-4 rounded-xl border-2 transition-all font-bold flex items-center justify-center gap-2 hover:scale-105">
                             <span>💰 Bayar Sebagian/Lunas</span>
@@ -154,11 +179,23 @@
                             <span class="text-sm font-bold">Transaksi ini akan dicatat sebagai HUTANG PENUH (Rp {{ number_format($grandTotal) }})</span>
                         </div>
                     </div>
-                </div>
-                @endif
 
-                <!-- Payment Method -->
-                <div class="col-span-2" @if($customerType==='pelanggan' && $customer) x-show="paymentMode === 'bayar'" x-transition @endif>
+                    {{-- Payment Method (Hidden for Hutang Penuh) --}}
+                    <div x-show="paymentMode === 'bayar'" x-transition class="mt-4">
+                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1.5">Metode Pembayaran</label>
+                        <div class="grid grid-cols-4 gap-2">
+                            @foreach(['tunai' => '💵 Tunai', 'transfer' => '🏦 Transfer', 'qris' => '📱 QRIS', 'kartu_debit' => '💳 Debit'] as $val => $label)
+                            <button wire:click="$set('paymentMethod', '{{ $val }}')"
+                                class="px-4 py-3 text-base rounded-lg border-2 transition-all font-bold {{ $paymentMethod === $val ? 'bg-blue-50 border-blue-500 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300' : 'bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:border-gray-300' }}">
+                                {{ $label }}
+                            </button>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                @else
+                {{-- Payment Method for Non-Member (Umum) --}}
+                <div class="col-span-2">
                     <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1.5">Metode Pembayaran</label>
                     <div class="grid grid-cols-4 gap-2">
                         @foreach(['tunai' => '💵 Tunai', 'transfer' => '🏦 Transfer', 'qris' => '📱 QRIS', 'kartu_debit' => '💳 Debit'] as $val => $label)
@@ -169,80 +206,69 @@
                         @endforeach
                     </div>
                 </div>
+                @endif
+
+                {{-- This section is now handled within the Member Payment Mode Selection block --}}
             </div>
 
-            <!-- Payment Input & Change Display -->
-            <div x-data="{
-                payment: @entangle('payment').live,
-                total: @entangle('grandTotal'),
-                get change() {
-                    return this.payment - this.total;
-                },
-                formatNumber(v) { 
-                    return v ? parseInt(v.toString().replace(/[^0-9]/g, '')).toLocaleString('id-ID') : '0'; 
-                },
-                updatePayment(e) { 
-                    let raw = e.target.value.replace(/[^0-9]/g, '');
-                    this.payment = raw ? parseInt(raw) : 0;
-                }
-            }" @if($customerType==='pelanggan' && $customer) x-show="paymentMode === 'bayar'" x-transition @endif>
-                <div class="grid grid-cols-2 gap-4">
-                    <!-- Uang Input -->
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1.5">UANG INPUT</label>
 
-                        {{-- Member Hint --}}
-                        @if ($customerType === 'pelanggan' && $customer)
-                        <div class="mb-2 p-2 bg-blue-50 dark:bg-blue-900/20 border border-blue-300 dark:border-blue-700 rounded-lg">
-                            <div class="flex items-start gap-2">
-                                <svg class="w-4 h-4 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                <div class="text-xs text-blue-700 dark:text-blue-300">
-                                    <span class="font-bold">Member bisa hutang:</span>
-                                    <ul class="mt-1 space-y-0.5 ml-2">
-                                        <li>• Kosongkan (Rp 0) = <span class="font-semibold">Hutang Penuh</span></li>
-                                        <li>• Bayar sebagian = <span class="font-semibold">Hutang Sisanya</span></li>
-                                        <li>• Bayar lunas = <span class="font-semibold">Tidak ada hutang</span></li>
-                                    </ul>
-                                </div>
+            <!-- Payment Input & Change Display -->
+            <div x-show="!isMember || paymentMode === 'bayar'" x-transition class="grid grid-cols-2 gap-4">
+                <!-- Uang Input -->
+                <div x-show="!isMember || paymentMode === 'bayar'">
+                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1.5">UANG INPUT</label>
+
+                    {{-- Member Hint --}}
+                    @if ($customerType === 'pelanggan' && $customer)
+                    <div class="mb-2 p-2 bg-blue-50 dark:bg-blue-900/20 border border-blue-300 dark:border-blue-700 rounded-lg">
+                        <div class="flex items-start gap-2">
+                            <svg class="w-4 h-4 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div class="text-xs text-blue-700 dark:text-blue-300">
+                                <span class="font-bold">Member bisa hutang:</span>
+                                <ul class="mt-1 space-y-0.5 ml-2">
+                                    <li>• Kosongkan (Rp 0) = <span class="font-semibold">Hutang Penuh</span></li>
+                                    <li>• Bayar sebagian = <span class="font-semibold">Hutang Sisanya</span></li>
+                                    <li>• Bayar lunas = <span class="font-semibold">Tidak ada hutang</span></li>
+                                </ul>
                             </div>
                         </div>
-                        @endif
-                        <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 font-bold text-lg">Rp</span>
-                            <input type="text"
-                                x-ref="paymentInput"
-                                x-init="$nextTick(() => $el.focus())"
-                                :value="formatNumber(payment)"
-                                @input="updatePayment($event)"
-                                class="w-full pl-12 pr-3 py-3 bg-white dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 rounded-xl text-3xl font-black text-gray-800 dark:text-gray-100 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-right"
-                                placeholder="0">
-                        </div>
-                        <!-- Quick Cash Buttons -->
-                        <div class="mt-4 grid grid-cols-2 gap-2">
-                            @if ($customerType === 'pelanggan' && $customer)
-                            <button type="button" @click="payment = 0" class="px-3 py-4 bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-900/50 text-red-700 dark:text-red-300 rounded-xl text-sm font-black transition-all shadow-sm flex items-center justify-center border-2 border-red-300 dark:border-red-700">💳 Hutang Penuh</button>
-                            <button type="button" @click="payment = 50000" class="px-3 py-4 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-xl text-lg font-black transition-all shadow-sm flex items-center justify-center">50rb</button>
-                            <button type="button" @click="payment = 100000" class="px-3 py-4 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-xl text-lg font-black transition-all shadow-sm flex items-center justify-center">100rb</button>
-                            <button type="button" @click="payment = 150000" class="px-3 py-4 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-xl text-lg font-black transition-all shadow-sm flex items-center justify-center">150rb</button>
-                            @else
-                            <button type="button" @click="payment = 50000" class="px-3 py-4 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-xl text-lg font-black transition-all shadow-sm flex items-center justify-center">50rb</button>
-                            <button type="button" @click="payment = 100000" class="px-3 py-4 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-xl text-lg font-black transition-all shadow-sm flex items-center justify-center">100rb</button>
-                            <button type="button" @click="payment = 150000" class="px-3 py-4 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-xl text-lg font-black transition-all shadow-sm flex items-center justify-center">150rb</button>
-                            <button type="button" @click="payment = 200000" class="px-3 py-4 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-xl text-lg font-black transition-all shadow-sm flex items-center justify-center">200rb</button>
-                            @endif
-                        </div>
                     </div>
+                    @endif
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 font-bold text-lg">Rp</span>
+                        <input type="text"
+                            x-ref="paymentInput"
+                            x-init="$nextTick(() => $el.focus())"
+                            :value="formatNumber(payment)"
+                            @input="updatePayment($event)"
+                            class="w-full pl-12 pr-3 py-3 bg-white dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 rounded-xl text-3xl font-black text-gray-800 dark:text-gray-100 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-right"
+                            placeholder="0">
+                    </div>
+                    <!-- Quick Cash Buttons -->
+                    <div class="mt-4 grid grid-cols-2 gap-2">
+                        @if ($customerType === 'pelanggan' && $customer)
+                        <button type="button" @click="payment = 0" class="px-3 py-4 bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-900/50 text-red-700 dark:text-red-300 rounded-xl text-sm font-black transition-all shadow-sm flex items-center justify-center border-2 border-red-300 dark:border-red-700">💳 Hutang Penuh</button>
+                        <button type="button" @click="payment = 50000" class="px-3 py-4 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-xl text-lg font-black transition-all shadow-sm flex items-center justify-center">50rb</button>
+                        <button type="button" @click="payment = 100000" class="px-3 py-4 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-xl text-lg font-black transition-all shadow-sm flex items-center justify-center">100rb</button>
+                        <button type="button" @click="payment = 150000" class="px-3 py-4 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-xl text-lg font-black transition-all shadow-sm flex items-center justify-center">150rb</button>
+                        @else
+                        <button type="button" @click="payment = 50000" class="px-3 py-4 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-xl text-lg font-black transition-all shadow-sm flex items-center justify-center">50rb</button>
+                        <button type="button" @click="payment = 100000" class="px-3 py-4 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-xl text-lg font-black transition-all shadow-sm flex items-center justify-center">100rb</button>
+                        <button type="button" @click="payment = 150000" class="px-3 py-4 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-xl text-lg font-black transition-all shadow-sm flex items-center justify-center">150rb</button>
+                        <button type="button" @click="payment = 200000" class="px-3 py-4 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-xl text-lg font-black transition-all shadow-sm flex items-center justify-center">200rb</button>
+                        @endif
+                    </div>
+                </div>
 
-                    <!-- Kembalian -->
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1.5">Kembalian</label>
-                        <div class="p-5 rounded-xl border-2 transition-all"
-                            :class="change < 0 ? 'bg-red-50 text-red-700 border-red-300 dark:bg-red-900/30 dark:text-red-300 dark:border-red-700' : 'bg-green-50 text-green-800 border-green-300 dark:bg-green-900/40 dark:text-green-300 dark:border-green-700'">
-                            <div class="text-xs font-bold opacity-70 mb-1.5" x-text="change < 0 ? '⚠️ KURANG BAYAR' : '✅ KEMBALI'"></div>
-                            <div class="text-3xl font-black tracking-tight" x-text="'Rp ' + formatNumber(Math.abs(change))"></div>
-                        </div>
+                <!-- Kembalian -->
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1.5">Kembalian</label>
+                    <div class="p-5 rounded-xl border-2 transition-all"
+                        :class="change < 0 ? 'bg-red-50 text-red-700 border-red-300 dark:bg-red-900/30 dark:text-red-300 dark:border-red-700' : 'bg-green-50 text-green-800 border-green-300 dark:bg-green-900/40 dark:text-green-300 dark:border-green-700'">
+                        <div class="text-xs font-bold opacity-70 mb-1.5" x-text="change < 0 ? '⚠️ KURANG BAYAR' : '✅ KEMBALI'"></div>
+                        <div class="text-3xl font-black tracking-tight" x-text="'Rp ' + formatNumber(Math.abs(change))"></div>
                     </div>
                 </div>
             </div>

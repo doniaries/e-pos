@@ -338,92 +338,98 @@ class Pos extends Component
         }
 
         try {
-            DB::beginTransaction();
+            $retryCount = 0;
+            $maxRetries = 3;
+            $penjualan = null;
 
-            // Cek apakah ini transaksi baru atau melanjutkan draft
-            if ($this->activeSaleId) {
-                // Jika melanjutkan draft, ambil data yang sudah ada
-                $penjualan = Penjualan::find($this->activeSaleId);
+            while ($retryCount < $maxRetries) {
+                try {
+                    DB::beginTransaction();
 
-                // Update data transaksi yang ada
-                $paymentStatus = $this->calculatePaymentStatus();
-                $customerId = $this->customerType === 'pelanggan' ? $this->customer : null;
+                    $paymentStatus = $this->calculatePaymentStatus();
+                    $customerId = $this->customerType === 'pelanggan' ? $this->customer : null;
 
-                $penjualan->update([
-                    'pelanggan_id' => $customerId,
-                    'subtotal' => $this->grandTotal,
-                    'total' => $this->grandTotal,
-                    'bayar' => $this->payment,
-                    'kembali' => $this->change,
-                    'status_pembayaran' => $paymentStatus,
-                    'status' => 'selesai',
-                    'user_id' => auth()->id(),
-                ]);
+                    // Cek apakah ini transaksi baru atau melanjutkan draft
+                    if ($this->activeSaleId) {
+                        $penjualan = Penjualan::find($this->activeSaleId);
+                        $penjualan->update([
+                            'pelanggan_id' => $customerId,
+                            'subtotal' => $this->grandTotal,
+                            'total' => $this->grandTotal,
+                            'bayar' => $this->payment,
+                            'kembali' => $this->change,
+                            'status_pembayaran' => $paymentStatus,
+                            'status' => Penjualan::STATUS_COMPLETED,
+                            'user_id' => auth()->id(),
+                        ]);
+                        $penjualan->details()->delete();
+                    } else {
+                        $penjualan = Penjualan::create([
+                            'nomor' => Penjualan::generateNomor(),
+                            'user_id' => auth()->id(),
+                            'shift_id' => $this->activeShiftId,
+                            'pelanggan_id' => $customerId,
+                            'subtotal' => $this->grandTotal,
+                            'diskon_persen' => 0,
+                            'diskon_nilai' => 0,
+                            'pajak_persen' => 0,
+                            'pajak_nilai' => 0,
+                            'total' => $this->grandTotal,
+                            'bayar' => $this->payment,
+                            'kembali' => $this->change,
+                            'status_pembayaran' => $paymentStatus,
+                            'status' => Penjualan::STATUS_COMPLETED
+                        ]);
+                    }
 
-                // Update customer debt if partial/no payment
-                if ($paymentStatus !== 'lunas') {
-                    $this->updateCustomerDebt($customerId, $this->grandTotal, $this->payment);
-                }
+                    // Update customer debt if not fully paid
+                    if ($paymentStatus !== Penjualan::PAYMENT_PAID) {
+                        $this->updateCustomerDebt($customerId, $this->grandTotal, $this->payment);
+                    }
 
-                // Hapus detail lama untuk diganti dengan isi keranjang yang baru
-                $penjualan->details()->delete();
-            } else {
-                // Jika transaksi baru, buat record baru dan nomor invoice baru
-                $paymentStatus = $this->calculatePaymentStatus();
-                $customerId = $this->customerType === 'pelanggan' ? $this->customer : null;
+                    foreach ($this->cart as $productId => $item) {
+                        $produk = Produk::findOrFail($productId);
+                        if ($produk->stok < $item['quantity']) {
+                            throw new \Exception("Stok {$produk->nama} tidak mencukupi!");
+                        }
 
-                $penjualan = Penjualan::create([
-                    'nomor' => Penjualan::generateNomor(),
-                    'user_id' => auth()->id(),
-                    'shift_id' => $this->activeShiftId, // Add shift tracking
-                    'pelanggan_id' => $customerId,
-                    'subtotal' => $this->grandTotal,
-                    'diskon_persen' => 0,
-                    'diskon_nilai' => 0,
-                    'pajak_persen' => 0,
-                    'pajak_nilai' => 0,
-                    'total' => $this->grandTotal,
-                    'bayar' => $this->payment,
-                    'kembali' => $this->change,
-                    'status_pembayaran' => $paymentStatus,
-                    'status' => 'selesai'
-                ]);
+                        PenjualanDetail::create([
+                            'penjualan_id' => $penjualan->id,
+                            'produk_id' => $productId,
+                            'jumlah' => $item['quantity'],
+                            'satuan_id' => $item['satuan_id'],
+                            'harga' => $item['price'],
+                            'diskon_persen' => 0,
+                            'diskon_nilai' => 0,
+                            'subtotal' => $item['subtotal']
+                        ]);
 
-                // Update customer debt if partial/no payment
-                if ($paymentStatus !== 'lunas') {
-                    $this->updateCustomerDebt($customerId, $this->grandTotal, $this->payment);
+                        $produk->decrement('stok', $item['quantity']);
+                    }
+
+                    Pembayaran::create([
+                        'penjualan_id' => $penjualan->id,
+                        'metode' => strtolower($this->paymentMethod),
+                        'jumlah' => $this->payment,
+                        'catatan' => 'Pembayaran POS'
+                    ]);
+
+                    DB::commit();
+                    break; // Success, exit retry loop
+
+                } catch (\Illuminate\Database\QueryException $e) {
+                    DB::rollBack();
+                    if ($e->errorInfo[1] == 1062 && $retryCount < $maxRetries - 1) {
+                        $retryCount++;
+                        usleep(100000); // Small delay before retry
+                        continue;
+                    }
+                    throw $e;
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    throw $e;
                 }
             }
-
-            foreach ($this->cart as $productId => $item) {
-                $produk = Produk::findOrFail($productId);
-
-                if ($produk->stok < $item['quantity']) {
-                    throw new \Exception("Stok {$produk->nama} tidak mencukupi!");
-                }
-
-                PenjualanDetail::create([
-                    'penjualan_id' => $penjualan->id,
-                    'produk_id' => $productId,
-                    'jumlah' => $item['quantity'],
-                    'satuan_id' => $item['satuan_id'],
-                    'harga' => $item['price'],
-                    'diskon_persen' => 0,
-                    'diskon_nilai' => 0,
-                    'subtotal' => $item['subtotal']
-                ]);
-
-                $produk->decrement('stok', $item['quantity']);
-            }
-
-            Pembayaran::create([
-                'penjualan_id' => $penjualan->id,
-                'metode' => strtolower($this->paymentMethod), // Pastikan value dalam string
-                'jumlah' => $this->payment,
-                'catatan' => 'Pembayaran POS'
-            ]);
-
-            DB::commit();
 
             $this->showPaymentModal = false;
             $this->resetCart();
@@ -431,9 +437,7 @@ class Pos extends Component
             $this->dispatch('transaction-success', [
                 'nomor' => $penjualan->nomor ?? ''
             ]);
-            // session()->flash('message', "Transaksi berhasil! No: {$penjualan->nomor}");
         } catch (\Exception $e) {
-            DB::rollBack();
             session()->flash('error', 'Error: ' . $e->getMessage());
         }
     }
@@ -463,11 +467,11 @@ class Pos extends Component
     private function calculatePaymentStatus()
     {
         if ($this->payment >= $this->grandTotal) {
-            return 'lunas';
+            return Penjualan::PAYMENT_PAID;
         } elseif ($this->payment > 0) {
-            return 'bayar_sebagian';
+            return Penjualan::PAYMENT_PARTIAL;
         } else {
-            return 'hutang';
+            return Penjualan::PAYMENT_UNPAID;
         }
     }
 
@@ -477,7 +481,10 @@ class Pos extends Component
 
         $debtAmount = $totalAmount - $paidAmount;
         if ($debtAmount > 0) {
-            \App\Models\Pelanggan::find($customerId)->increment('hutang', $debtAmount);
+            \App\Models\Pelanggan::findOrFail($customerId)->update([
+                'hutang' => DB::raw("hutang + $debtAmount"),
+                'tanggal_hutang_terakhir' => now()
+            ]);
         }
     }
 
@@ -688,8 +695,8 @@ class Pos extends Component
                     'total' => $this->grandTotal,
                     'bayar' => 0,
                     'kembali' => 0,
-                    'status_pembayaran' => 'hutang',
-                    'status' => 'draft',
+                    'status_pembayaran' => Penjualan::PAYMENT_UNPAID,
+                    'status' => Penjualan::STATUS_DRAFT,
                     'catatan' => 'Pending Transaction'
                 ]);
             }

@@ -19,9 +19,9 @@ class Penjualan extends Model
     const STATUS_COMPLETED = 'selesai';
     const STATUS_CANCELLED = 'batal';
 
-    // Status pembayaran
-    const PAYMENT_UNPAID = 'belum_bayar';
-    const PAYMENT_PARTIAL = 'sebagian';
+    // Status pembayaran (Aligned with database enum)
+    const PAYMENT_UNPAID = 'hutang';
+    const PAYMENT_PARTIAL = 'bayar_sebagian';
     const PAYMENT_PAID = 'lunas';
 
     protected $fillable = [
@@ -84,18 +84,22 @@ class Penjualan extends Model
         $tahun = $today->format('Y');
         $bulan = $today->format('m');
         $hari = $today->format('d');
+        $datePrefix = "$prefix/$tahun/$bulan/$hari/";
 
-        // Pastikan menyertakan data yang sudah dihapus (soft-deleted) agar nomor unik tidak bertabrakan
+        // Get the latest number specifically for today using a more reliable sort
+        // We filter by 'nomor' prefix to be extremely specific
         $lastInvoice = self::withTrashed()
-            ->whereYear('created_at', $tahun)
-            ->whereMonth('created_at', $bulan)
-            ->whereDay('created_at', $hari)
-            ->latest()
+            ->where('nomor', 'like', $datePrefix . '%')
+            ->orderByRaw('CAST(SUBSTRING(nomor, -4) AS UNSIGNED) DESC')
             ->first();
 
-        $urutan = $lastInvoice ? intval(substr($lastInvoice->nomor, -4)) + 1 : 1;
+        $urutan = 1;
+        if ($lastInvoice) {
+            $lastNumber = intval(substr($lastInvoice->nomor, -4));
+            $urutan = $lastNumber + 1;
+        }
 
-        return sprintf("%s/%s/%s/%s/%04d", $prefix, $tahun, $bulan, $hari, $urutan);
+        return sprintf("%s%04d", $datePrefix, $urutan);
     }
 
     // In Penjualan.php
