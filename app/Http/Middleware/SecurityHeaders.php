@@ -30,7 +30,8 @@ class SecurityHeaders
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
 
         // Restrict browser features and APIs
-        $response->headers->set('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
+        // Allow camera access for barcode scanning, but restrict geolocation and microphone
+        $response->headers->set('Permissions-Policy', 'geolocation=(), microphone=(), camera=(self)');
 
         // Content Security Policy (CSP) - Adjust based on your needs
         // Note: This is a basic CSP, you may need to adjust it for your specific requirements
