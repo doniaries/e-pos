@@ -160,15 +160,15 @@
 
     <!-- Product Added Notification -->
     <div x-cloak x-show="showProductAddedNotification" x-transition
-        class="absolute top-4 right-4 z-[95] px-6 py-4 bg-green-600 text-white rounded-xl shadow-2xl border-2 border-green-400 min-w-[380px]">
-        <div class="flex items-start gap-4">
-            <svg class="w-8 h-8 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+        class="absolute top-4 right-4 z-[95] px-4 py-3 bg-green-600 text-white rounded-lg shadow-xl border-2 border-green-400 max-w-[280px]">
+        <div class="flex items-start gap-3">
+            <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
             </svg>
             <div class="flex-1">
-                <p class="font-black text-base mb-2" x-text="productAddedData.isNew ? '✨ Produk Ditambahkan' : '🔄 Jumlah Diperbarui'"></p>
-                <p class="text-lg font-bold mb-1.5" x-text="productAddedData.name"></p>
-                <p class="text-sm font-semibold opacity-95">
+                <p class="font-bold text-sm mb-1" x-text="productAddedData.isNew ? '✨ Produk Ditambahkan' : '🔄 Jumlah Diperbarui'"></p>
+                <p class="text-base font-bold mb-1 truncate" x-text="productAddedData.name"></p>
+                <p class="text-xs font-semibold opacity-90">
                     Jumlah: <span x-text="productAddedData.quantity"></span> pcs
                 </p>
             </div>
@@ -199,8 +199,8 @@
         <!-- FULL WIDTH: Cart & Search -->
         <div class="w-full flex flex-col bg-white dark:bg-gray-900 transition-colors duration-300 min-0">
             <!-- Search Bar Header -->
-            <div class="p-4 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm z-30 relative">
-                <div class="relative flex gap-2">
+            <div class="p-2 md:p-4 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm z-30 relative">
+                <div class="relative flex gap-1 md:gap-2">
                     <div class="flex-1 relative" x-data="{
                         selectedIndex: -1,
                         resultsCount: 0,
@@ -281,8 +281,8 @@
                         @keydown.arrow-down.prevent="navigate('down')"
                         @keydown.arrow-up.prevent="navigate('up')"
                         @keydown.enter.stop.prevent="select()">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div class="absolute inset-y-0 left-0 pl-2 md:pl-3 flex items-center pointer-events-none">
+                            <svg class="h-4 w-4 md:h-5 md:w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </div>
@@ -290,19 +290,19 @@
                             wire:model.live.debounce.300ms="searchQuery"
                             x-on:input="selectedIndex = -1; resultsCount = $el.dataset.results"
                             placeholder="Scan Barcode / Cari Nama Produk..."
-                            class="block w-full pl-10 pr-12 py-3.5 border border-gray-200 dark:border-gray-700 rounded-xl leading-5 bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:bg-white dark:focus:bg-gray-700 focus:ring-2 focus:ring-black dark:focus:ring-gray-500 focus:border-transparent text-base transition-all shadow-inner"
+                            class="block w-full pl-8 md:pl-10 pr-10 md:pr-12 py-2 md:py-3.5 border border-gray-200 dark:border-gray-700 rounded-lg md:rounded-xl leading-5 bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:bg-white dark:focus:bg-gray-700 focus:ring-2 focus:ring-black dark:focus:ring-gray-500 focus:border-transparent text-sm md:text-base transition-all shadow-inner"
                             data-results="{{ count($searchResults) }}"
                             autofocus>
 
-                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                        <div class="absolute inset-y-0 right-0 pr-2 md:pr-3 flex items-center">
                             <!-- Helper Text / Icon -->
                             @if(empty($searchQuery))
-                            <svg class="h-6 w-6 text-gray-400 opacity-60 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg class="h-5 w-5 md:h-6 md:w-6 text-gray-400 opacity-60 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 7V5a2 2 0 012-2h2m10 0h2a2 2 0 012 2v2m0 10v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2M9 7h6M9 12h6M9 17h6" />
                             </svg>
                             @else
                             <button wire:click="$set('searchQuery', '')" @click="$nextTick(() => $refs.searchInput.focus())" class="text-gray-400 hover:text-red-500 transition-colors focus:outline-none">
-                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg class="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             </button>
@@ -317,16 +317,16 @@
                                 wire:click="selectProduct({{ $product->id }})"
                                 @mouseenter="selectedIndex = {{ $index }}"
                                 :class="{ 'bg-blue-600 text-white dark:bg-blue-600': selectedIndex === {{ $index }}, 'hover:bg-blue-50 dark:hover:bg-blue-900/20': selectedIndex !== {{ $index }} }"
-                                class="p-4 cursor-pointer border-b border-gray-50 dark:border-gray-700 last:border-0 flex justify-between items-center transition-colors">
+                                class="p-3 md:p-4 cursor-pointer border-b border-gray-50 dark:border-gray-700 last:border-0 flex justify-between items-center transition-colors">
                                 <div>
-                                    <h4 class="font-bold text-base mb-0.5" :class="selectedIndex === {{ $index }} ? 'text-white' : 'text-gray-800 dark:text-gray-200'">{{ $product->nama }}</h4>
+                                    <h4 class="font-bold text-sm md:text-base mb-0.5" :class="selectedIndex === {{ $index }} ? 'text-white' : 'text-gray-800 dark:text-gray-200'">{{ $product->nama }}</h4>
                                     <span class="text-[10px] font-mono px-2 py-0.5 rounded transition-colors"
                                         :class="selectedIndex === {{ $index }} ? 'bg-white/20 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400'">
                                         {{ $product->kode_produk }}
                                     </span>
                                 </div>
                                 <div class="text-right">
-                                    <span class="block font-bold text-lg" :class="selectedIndex === {{ $index }} ? 'text-white' : 'text-blue-600 dark:text-blue-400'">
+                                    <span class="block font-bold text-base md:text-lg" :class="selectedIndex === {{ $index }} ? 'text-white' : 'text-blue-600 dark:text-blue-400'">
                                         Rp {{ number_format((float) $product->harga_jual) }}
                                     </span>
                                     <span class="text-xs {{ $product->stok <= 0 ? 'text-red-500 font-bold' : ($product->stok <= 5 ? 'text-amber-500 font-bold' : '') }}"
@@ -337,17 +337,17 @@
                             </div>
                             @endforeach
                             @else
-                            <div class="p-8 text-center bg-gray-50 dark:bg-gray-800/50">
-                                <div class="flex justify-center mb-4">
-                                    <div class="p-4 bg-red-100 dark:bg-red-900/30 rounded-full">
-                                        <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="p-6 md:p-8 text-center bg-gray-50 dark:bg-gray-800/50">
+                                <div class="flex justify-center mb-3 md:mb-4">
+                                    <div class="p-3 md:p-4 bg-red-100 dark:bg-red-900/30 rounded-full">
+                                        <svg class="w-6 h-6 md:w-8 md:h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                                         </svg>
                                     </div>
                                 </div>
-                                <h4 class="text-xl font-black text-gray-800 dark:text-white mb-2 uppercase tracking-tight">Produk Tidak Terdaftar</h4>
-                                <p class="text-gray-500 dark:text-gray-400 mb-6 font-medium italic">Barcode atau nama produk tidak ditemukan dalam database</p>
-                                <button wire:click="$set('searchQuery', '')" @click="$nextTick(() => $refs.searchInput.focus())" class="px-6 py-3 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-sm font-black rounded-xl hover:scale-105 active:scale-95 transition-all shadow-lg">
+                                <h4 class="text-lg md:text-xl font-black text-gray-800 dark:text-white mb-2 uppercase tracking-tight">Produk Tidak Terdaftar</h4>
+                                <p class="text-gray-500 dark:text-gray-400 mb-4 md:mb-6 font-medium italic text-sm md:text-base">Barcode atau nama produk tidak ditemukan dalam database</p>
+                                <button wire:click="$set('searchQuery', '')" @click="$nextTick(() => $refs.searchInput.focus())" class="px-4 md:px-6 py-2 md:py-3 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-xs md:text-sm font-black rounded-lg md:rounded-xl hover:scale-105 active:scale-95 transition-all shadow-lg">
                                     RESET PENCARIAN
                                 </button>
                             </div>
@@ -356,30 +356,50 @@
                         @endif
                     </div>
 
-                    <div class="flex gap-3">
-                        <button @click="showPendingModal = !showPendingModal" class="px-5 py-3 bg-amber-500 hover:bg-amber-600 text-white font-black rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-2 whitespace-nowrap group" title="Daftar Draft (F9)">
-                            <svg class="h-5 w-5 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div class="flex gap-1 md:gap-3">
+                        <button @click="showPendingModal = !showPendingModal" class="relative group px-2 md:px-5 py-2 md:py-3 bg-amber-500 hover:bg-amber-600 text-white font-black rounded-lg md:rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1 md:gap-2 whitespace-nowrap" title="Daftar Draft (F9)">
+                            <svg class="h-4 w-4 md:h-5 md:w-5 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <span class="text-sm">Draft (F9)</span>
+                            <span class="text-xs md:text-sm hidden sm:inline">Draft</span>
+                            <!-- Tooltip -->
+                            <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-3 py-1.5 bg-slate-800 text-white text-xs rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 border border-slate-600">
+                                Daftar Draft (F9)
+                                <div class="absolute bottom-full left-1/2 -translate-x-1/2 -mb-1 border-4 border-transparent border-b-slate-800"></div>
+                            </div>
                         </button>
-                        <button @click="showProductTable = !showProductTable" class="px-5 py-3 bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 text-white font-black rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-2 whitespace-nowrap group">
-                            <svg class="h-5 w-5 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <button @click="showProductTable = !showProductTable" class="relative group px-2 md:px-5 py-2 md:py-3 bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 text-white font-black rounded-lg md:rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1 md:gap-2 whitespace-nowrap">
+                            <svg class="h-4 w-4 md:h-5 md:w-5 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16m-7 6h7" />
                             </svg>
-                            <span class="text-sm">Produk (F2)</span>
+                            <span class="text-xs md:text-sm hidden sm:inline">Produk</span>
+                            <!-- Tooltip -->
+                            <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-3 py-1.5 bg-slate-800 text-white text-xs rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 border border-slate-600">
+                                Daftar Produk (F2)
+                                <div class="absolute bottom-full left-1/2 -translate-x-1/2 -mb-1 border-4 border-transparent border-b-slate-800"></div>
+                            </div>
                         </button>
-                        <button @click="showHistoryModal = !showHistoryModal" class="px-5 py-3 bg-gray-600 hover:bg-gray-700 text-white font-black rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-2 whitespace-nowrap group" title="Riwayat Penjualan (F8)">
-                            <svg class="h-5 w-5 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <button @click="showHistoryModal = !showHistoryModal" class="relative group px-2 md:px-5 py-2 md:py-3 bg-gray-600 hover:bg-gray-700 text-white font-black rounded-lg md:rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1 md:gap-2 whitespace-nowrap" title="Riwayat Penjualan (F8)">
+                            <svg class="h-4 w-4 md:h-5 md:w-5 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                             </svg>
-                            <span class="text-sm">Riwayat (F8)</span>
+                            <span class="text-xs md:text-sm hidden sm:inline">Riwayat</span>
+                            <!-- Tooltip -->
+                            <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-3 py-1.5 bg-slate-800 text-white text-xs rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 border border-slate-600">
+                                Riwayat Penjualan (F8)
+                                <div class="absolute bottom-full left-1/2 -translate-x-1/2 -mb-1 border-4 border-transparent border-b-slate-800"></div>
+                            </div>
                         </button>
-                        <button @click="$wire.pendingTransaction()" class="px-5 py-3 bg-orange-500 hover:bg-orange-600 text-white font-black rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-2 whitespace-nowrap group" title="Tunda Transaksi (F4)">
-                            <svg class="h-5 w-5 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <button @click="$wire.pendingTransaction()" class="relative group px-2 md:px-5 py-2 md:py-3 bg-orange-500 hover:bg-orange-600 text-white font-black rounded-lg md:rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1 md:gap-2 whitespace-nowrap" title="Tunda Transaksi (F4)">
+                            <svg class="h-4 w-4 md:h-5 md:w-5 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <span class="text-sm">Tunda (F4)</span>
+                            <span class="text-xs md:text-sm hidden sm:inline">Tunda</span>
+                            <!-- Tooltip -->
+                            <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-3 py-1.5 bg-slate-800 text-white text-xs rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 border border-slate-600">
+                                Tunda Transaksi (F4)
+                                <div class="absolute bottom-full left-1/2 -translate-x-1/2 -mb-1 border-4 border-transparent border-b-slate-800"></div>
+                            </div>
                         </button>
                     </div>
                 </div>
