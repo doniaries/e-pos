@@ -59,7 +59,10 @@ class SettingResource extends Resource
                     ])
                     ->required(),
                 Forms\Components\FileUpload::make('logo')
+                    ->label('Logo Toko')
                     ->directory('logos')
+                    ->disk('public')
+                    ->visibility('public')
                     ->image()
                     ->maxSize(2048)
                     ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/jpg'])
@@ -77,6 +80,8 @@ class SettingResource extends Resource
                 Forms\Components\FileUpload::make('qr_code_image')
                     ->label('QR Code Image')
                     ->directory('qr_codes')
+                    ->disk('public')
+                    ->visibility('public')
                     ->image()
                     ->maxSize(1024)
                     ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/jpg'])
@@ -113,7 +118,7 @@ class SettingResource extends Resource
                                 'usb' => '🔌 USB Direct Print (Local Shared Printer)',
                             ])
                             ->default('usb')
-                            ->required()
+                            // ->required()
                             ->selectablePlaceholder(false), // Force selection
 
                         // User Request: List PC printers
@@ -148,7 +153,7 @@ class SettingResource extends Resource
                                 return [];
                             })
                             ->searchable()
-                            ->required()
+                            // ->required()
                             ->helperText('Pilih nama printer yang terinstal di komputer Windows ini.'),
 
                         Forms\Components\TextInput::make('printer_share_name')
@@ -265,7 +270,6 @@ class SettingResource extends Resource
                 Tables\Columns\ImageColumn::make('logo')
                     ->label('Logo')
                     ->disk('public')
-                    ->visibility('public')
                     ->circular(),
                 Tables\Columns\TextColumn::make('nama_bank')
                     ->searchable()

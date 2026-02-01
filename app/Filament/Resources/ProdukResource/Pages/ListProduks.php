@@ -10,6 +10,7 @@ use Filament\Support\Enums\MaxWidth;
 
 use Filament\Resources\Components\Tab;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
 
 class ListProduks extends ListRecords
 {
@@ -18,6 +19,63 @@ class ListProduks extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            \EightyNine\ExcelImport\ExcelImportAction::make()
+                ->label('Import Produk')
+                ->modalHeading('Import Data Produk')
+                ->modalDescription('Unggah file Excel (.xlsx) atau CSV untuk mengimpor data produk ke database.')
+                ->modalSubmitActionLabel('Impor')
+                ->modalCancelActionLabel('Batal')
+                ->color('info')
+                ->icon('heroicon-o-arrow-up-tray')
+                ->processCollectionUsing(function ($collection) {
+                    foreach ($collection as $row) {
+                        try {
+                            // Find or create Kategori
+                            $kategoriId = null;
+                            if (!empty($row['kategori'])) {
+                                $kategori = \App\Models\KategoriProduk::firstOrCreate(
+                                    ['nama' => strtoupper($row['kategori'])]
+                                );
+                                $kategoriId = $kategori->id;
+                            }
+
+                            // Find or create Satuan
+                            $satuanId = null;
+                            if (!empty($row['satuan'])) {
+                                $satuan = \App\Models\Satuan::firstOrCreate(
+                                    ['nama' => strtoupper($row['satuan'])]
+                                );
+                                $satuanId = $satuan->id;
+                            }
+
+                            // Create or update Produk
+                            \App\Models\Produk::updateOrCreate(
+                                [
+                                    'kode_produk' => strtoupper($row['kode_produk']),
+                                    'kode_tambahan' => !empty($row['kode_tambahan']) ? strtoupper($row['kode_tambahan']) : null,
+                                ],
+                                [
+                                    'nama' => strtoupper($row['nama']),
+                                    'kategori_produk_id' => $kategoriId,
+                                    'satuan_id' => $satuanId,
+                                    'harga_beli' => (int) ($row['harga_beli'] ?? 0),
+                                    'harga_jual' => (int) ($row['harga_jual'] ?? 0),
+                                    'harga_grosir' => (int) ($row['harga_grosir'] ?? $row['harga_jual'] ?? 0),
+                                    'stok' => (int) ($row['stok'] ?? 0),
+                                    'stok_minimum' => 1,
+                                ]
+                            );
+                        } catch (\Exception $e) {
+                            Log::error('Import error for row: ' . json_encode($row) . ' - ' . $e->getMessage());
+                            continue;
+                        }
+                    }
+
+                    \Filament\Notifications\Notification::make()
+                        ->title('Import Selesai')
+                        ->success()
+                        ->send();
+                }),
             Actions\CreateAction::make()
                 ->modalWidth(MaxWidth::SixExtraLarge)
                 ->modalAutofocus(),

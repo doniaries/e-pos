@@ -4,6 +4,7 @@ use App\Livewire\Pos;
 use App\Models\Setting;
 use App\Livewire\CetakStruk;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\PosController;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\BarcodeController;
@@ -32,7 +33,7 @@ Route::get('/logo', function () {
             }
         }
     } catch (\Exception $e) {
-        \Log::error('Error loading logo: ' . $e->getMessage());
+        Log::error('Error loading logo: ' . $e->getMessage());
     }
 
     // Return the placeholder if logo is not found or error occurs

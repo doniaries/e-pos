@@ -12,7 +12,7 @@
         "bezhansalleh/filament-shield": "^3.9",
         "designthebox/barcode-field": "^0.0.6",
         "dutchcodingcompany/filament-developer-logins": "^1.10",
-        "eightynine/filament-excel-import": "*",
+        "eightynine/filament-excel-import": "^3.1",
         "filament/filament": "^3.2",
         "flowframe/laravel-trend": "^0.4.0",
         "laravel-lang/common": "^6.7",
