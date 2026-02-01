@@ -513,13 +513,28 @@ class Pos extends Component
         // Calculate pending report sales
         $pendingSales = Penjualan::whereNull('laporan_harian_id')
             ->where('status', 'selesai')
+            ->with('pembayarans')
             ->get();
+
+        // Calculate cash and non-cash from pembayarans table
+        $totalCash = 0;
+        $totalNonCash = 0;
+
+        foreach ($pendingSales as $sale) {
+            foreach ($sale->pembayarans as $payment) {
+                if (strtolower($payment->metode) === 'tunai') {
+                    $totalCash += $payment->jumlah;
+                } else {
+                    $totalNonCash += $payment->jumlah;
+                }
+            }
+        }
 
         $this->closeDaySummary = [
             'count' => $pendingSales->count(),
             'omset' => $pendingSales->sum('total'),
-            'cash' => $pendingSales->where('metode_pembayaran', 'tunai')->sum('total'),
-            'non_cash' => $pendingSales->where('metode_pembayaran', '!=', 'tunai')->sum('total'),
+            'cash' => $totalCash,
+            'non_cash' => $totalNonCash,
             'cash_in_drawer' => 0,
         ];
 
