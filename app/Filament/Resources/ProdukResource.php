@@ -50,27 +50,14 @@ class ProdukResource extends Resource
                                             ->description('Detail identitas produk')
                                             ->schema([
                                                 Forms\Components\TextInput::make('kode_produk')
-                                                    ->label('Barcode Input')
-                                                    ->placeholder('Masukkan barcode...')
+                                                    ->label('Barcode / Kode Produk')
+                                                    ->placeholder('Scan barcode atau ketik manual...')
                                                     ->required()
                                                     ->extraInputAttributes([
                                                         'style' => 'text-transform: uppercase',
                                                         'x-init' => 'setTimeout(() => $el.focus(), 100)'
                                                     ])
-                                                    ->suffixAction(
-                                                        Forms\Components\Actions\Action::make('scan_barcode')
-                                                            ->icon('heroicon-m-camera')
-                                                            ->color('primary')
-                                                            ->label('Scan Kamera')
-                                                            ->modalHeading('Scan Barcode Produk')
-                                                            ->modalContent(view('filament.components.barcode-scanner'))
-                                                            ->modalSubmitAction(false)
-                                                            ->modalCancelAction(false)
-                                                            ->modalWidth(MaxWidth::Medium)
-                                                    )
-                                                    ->extraAttributes([
-                                                        'x-on:barcode-detected.window' => '$el.querySelector(\'input\').value = $event.detail.code; $el.querySelector(\'input\').dispatchEvent(new Event(\'input\'));',
-                                                    ])
+                                                    ->helperText('Gunakan barcode scanner untuk input otomatis')
                                                     ->dehydrateStateUsing(fn($state) => Str::upper($state))
                                                     ->maxLength(255)
                                                     ->unique(ignoreRecord: true, modifyRuleUsing: function (\Illuminate\Validation\Rules\Unique $rule, \Filament\Forms\Get $get) {
