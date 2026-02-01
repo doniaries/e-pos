@@ -92,7 +92,11 @@ class AdminPanelProvider extends PanelProvider
                     ->label('Master Data'),
                 NavigationGroup::make()
                     ->label('Pengaturan'),
-            ]);
+            ])
+            ->renderHook(
+                'panels::user-menu.before',
+                fn(): string => view('filament.header.store-status')->render()
+            );
     }
     public function register(): void
     {

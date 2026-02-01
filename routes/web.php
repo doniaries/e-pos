@@ -77,3 +77,15 @@ Route::post('/pos/test-direct-print', [PosController::class, 'testDirectPrint'])
 Route::get('/pos/print-struk/{id}', CetakStruk::class)
     ->middleware('auth')
     ->name('pos.print-struk');
+Route::get('/admin/toggle-store', function () {
+    $setting = Setting::first();
+    if ($setting) {
+        $setting->update([
+            'is_toko_tutup' => !$setting->is_toko_tutup,
+        ]);
+
+        $status = $setting->is_toko_tutup ? 'DITUTUP' : 'DIBUKA';
+        return back()->with('notification', "Toko berhasil $status");
+    }
+    return back();
+})->middleware(['auth'])->name('admin.store.toggle');
