@@ -213,7 +213,13 @@ class ProdukResource extends Resource
                                 Forms\Components\FileUpload::make('gambar_produk')
                                     ->image()
                                     ->hiddenLabel()
-                                    ->directory('gambar_produk'),
+                                    ->directory('gambar_produk')
+                                    ->maxSize(5120)
+                                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/jpg', 'image/webp'])
+                                    ->imageResizeMode('cover')
+                                    ->imageResizeTargetWidth('800')
+                                    ->imageResizeTargetHeight('800')
+                                    ->helperText('Format: JPG, PNG, WebP. Maksimal 5MB. Disarankan 800x800px.'),
                             ]),
 
                         Forms\Components\Tabs\Tab::make('Satuan Lanjutan')

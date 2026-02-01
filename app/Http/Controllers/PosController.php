@@ -11,7 +11,12 @@ class PosController extends Controller
 {
     public function printStruk($id)
     {
-        $penjualan = Penjualan::with(['details.produk', 'pelanggan', 'user', 'pembayaran'])->findOrFail($id);
+        // IDOR Protection: Verify user owns this transaction
+        $penjualan = Penjualan::with(['details.produk', 'pelanggan', 'user', 'pembayaran'])
+            ->where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
         $setting = Setting::first();
 
         return view('print.struk-thermal', compact('penjualan', 'setting'));
@@ -29,7 +34,12 @@ class PosController extends Controller
     public function directPrint($id)
     {
         try {
-            $penjualan = Penjualan::with(['details.produk', 'pelanggan', 'kasir'])->findOrFail($id);
+            // IDOR Protection: Verify user owns this transaction
+            $penjualan = Penjualan::with(['details.produk', 'pelanggan', 'kasir'])
+                ->where('id', $id)
+                ->where('user_id', auth()->id())
+                ->firstOrFail();
+
             $printerService = new ThermalPrinterService();
             $result = $printerService->printReceipt($penjualan);
 

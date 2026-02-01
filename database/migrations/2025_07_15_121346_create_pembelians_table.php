@@ -19,8 +19,15 @@ return new class extends Migration
             $table->decimal('total_harga', 15, 2)->default(0); // Total akhir
             $table->text('catatan')->nullable();
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();
+
+            // Merged from: 2026_01_18_140312_add_shift_id_to_transactions_tables.php
+            $table->foreignId('shift_id')->nullable()->constrained('shifts')->nullOnDelete();
+
             $table->timestamps();
             $table->softDeletes();
+
+            // Indexes
+            $table->index('shift_id');
         });
     }
 

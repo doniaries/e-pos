@@ -60,7 +60,14 @@ class SettingResource extends Resource
                     ->required(),
                 Forms\Components\FileUpload::make('logo')
                     ->directory('logos')
-                    ->image(),
+                    ->image()
+                    ->maxSize(2048)
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/jpg'])
+                    ->imageResizeMode('cover')
+                    ->imageCropAspectRatio('1:1')
+                    ->imageResizeTargetWidth('500')
+                    ->imageResizeTargetHeight('500')
+                    ->helperText('Format: JPG, PNG. Maksimal 2MB. Disarankan 500x500px.'),
                 Forms\Components\TextInput::make('nama_bank')
                     ->label('Nama Bank')
                     ->maxLength(255),
@@ -70,7 +77,14 @@ class SettingResource extends Resource
                 Forms\Components\FileUpload::make('qr_code_image')
                     ->label('QR Code Image')
                     ->directory('qr_codes')
-                    ->image(),
+                    ->image()
+                    ->maxSize(1024)
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/jpg'])
+                    ->imageResizeMode('cover')
+                    ->imageCropAspectRatio('1:1')
+                    ->imageResizeTargetWidth('300')
+                    ->imageResizeTargetHeight('300')
+                    ->helperText('Format: JPG, PNG. Maksimal 1MB. Disarankan 300x300px.'),
 
                 Forms\Components\Section::make('Pengaturan Printer')
                     ->schema([

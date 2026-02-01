@@ -123,6 +123,18 @@ class Pos extends Component
         return $query->limit(50)->get();
     }
 
+    #[Computed]
+    public function availableShifts()
+    {
+        return \App\Models\Shift::orderBy('jam_mulai')->get();
+    }
+
+    #[Computed]
+    public function currentShift()
+    {
+        return $this->activeShiftId ? \App\Models\Shift::find($this->activeShiftId) : null;
+    }
+
 
     public function toggleProductTable()
     {
@@ -363,6 +375,7 @@ class Pos extends Component
                 $penjualan = Penjualan::create([
                     'nomor' => Penjualan::generateNomor(),
                     'user_id' => auth()->id(),
+                    'shift_id' => $this->activeShiftId, // Add shift tracking
                     'pelanggan_id' => $customerId,
                     'subtotal' => $this->grandTotal,
                     'diskon_persen' => 0,

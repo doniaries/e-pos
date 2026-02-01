@@ -77,6 +77,25 @@
                 </div>
             </div>
         </div>
+
+        @if(\App\Helpers\ShiftHelper::shouldUseShift())
+        <div class="w-px h-4 md:h-8 bg-white/20"></div>
+
+        <!-- Shift Info -->
+        <div class="flex items-center gap-1.5 md:gap-3 overflow-hidden">
+            <div class="flex flex-col text-left truncate">
+                <span class="text-[7px] md:text-[9px] text-blue-200 uppercase font-black tracking-wider md:tracking-widest opacity-70 hidden sm:block">Shift</span>
+                <div class="flex items-center gap-1 md:gap-2">
+                    <svg class="w-3 h-3 md:w-4 md:h-4 text-blue-200 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <button wire:click="$set('showShiftModal', true)" class="text-white font-bold text-[10px] md:text-sm truncate max-w-[60px] md:max-w-none hover:text-blue-100 transition-colors">
+                        {{ $this->currentShift?->nama ?? 'Pilih Shift' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+        @endif
     </div>
 
     <!-- Right: Date/Time & Dark Mode -->

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('metode'); // tunai, transfer, qris, debit
             $table->decimal('jumlah', 15, 2);
             $table->text('catatan')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

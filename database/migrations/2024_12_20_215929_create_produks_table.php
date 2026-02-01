@@ -22,11 +22,16 @@ return new class extends Migration
             $table->decimal('harga_jual', 10, 0);
             $table->decimal('harga_grosir', 10, 0);
             $table->integer('stok')->default(0);
+
+            // Merged from: 2026_01_15_020445_add_stock_limits_to_produks_table.php
+            $table->integer('stok_minimum')->default(0);
+            $table->integer('stok_maksimum')->nullable()->comment('Kosong berarti tidak ada batasan');
+
             $table->string('gambar_produk')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
-            // Tambahkan index baru
+            // Indexes
             $table->index('kategori_produk_id');
             $table->index('satuan_id');
             $table->index(['stok', 'id']);

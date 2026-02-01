@@ -15,7 +15,15 @@ class CreatePenjualansTable extends Migration
             $table->id();
             $table->string('nomor')->unique(); // format: INV/tahun/bulan/nomor urut
             $table->foreignId('user_id')->constrained('users'); // kasir
+
+            // Merged from: 2026_01_18_140312_add_shift_id_to_transactions_tables.php
+            $table->foreignId('shift_id')->nullable()->constrained('shifts')->nullOnDelete();
+
             $table->foreignId('pelanggan_id')->nullable()->constrained('pelanggans');
+
+            // Merged from: 2026_01_16_031140_add_laporan_harian_id_to_penjualans_table.php
+            $table->foreignId('laporan_harian_id')->nullable()->constrained('laporan_harians')->nullOnDelete();
+
             $table->decimal('subtotal', 10, 0); // total sebelum diskon/pajak
             $table->decimal('diskon_persen', 5, 2)->default(0); // diskon dalam persen
             $table->decimal('diskon_nilai', 10, 0)->default(0); // diskon dalam rupiah
@@ -43,9 +51,11 @@ class CreatePenjualansTable extends Migration
             $table->softDeletes(); // untuk keamanan data histori
 
 
-            // Tambahkan index
+            // Indexes
             $table->index('user_id');
+            $table->index('shift_id');
             $table->index('pelanggan_id');
+            $table->index('laporan_harian_id');
             $table->index('status_pembayaran');
             $table->index(['created_at', 'id']);
             $table->index('status');

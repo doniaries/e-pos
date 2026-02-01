@@ -22,9 +22,15 @@ return new class extends Migration
             $table->integer('stok_akhir');
             $table->text('keterangan')->nullable();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
+
+            // Merged from: 2026_01_18_140312_add_shift_id_to_transactions_tables.php
+            $table->foreignId('shift_id')->nullable()->constrained('shifts')->nullOnDelete();
+
             $table->timestamps();
 
+            // Indexes
             $table->index(['produk_id', 'created_at']);
+            $table->index('shift_id');
         });
     }
 
