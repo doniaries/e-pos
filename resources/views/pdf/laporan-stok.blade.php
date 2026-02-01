@@ -90,6 +90,28 @@
             @endforeach
         </tbody>
     </table>
+
+    @if(isset($storeStatuses) && $storeStatuses->count() > 0)
+    <div style="margin-top: 20px;">
+        <h4 style="margin-bottom: 5px; color: #ef4444;">Riwayat Toko Tutup / Libur:</h4>
+        <table style="margin-top: 0; border: 1px solid #ef4444;">
+            <thead style="background-color: #fee2e2;">
+                <tr>
+                    <th style="width: 20%; color: #b91c1c; border-color: #fca5a5;">Tanggal</th>
+                    <th style="color: #b91c1c; border-color: #fca5a5;">Keterangan / Alasan</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($storeStatuses as $status)
+                <tr>
+                    <td style="border-color: #fca5a5;">{{ \Carbon\Carbon::parse($status->tanggal)->translatedFormat('d F Y') }}</td>
+                    <td style="border-color: #fca5a5;">{{ $status->catatan ?? 'Toko Libur / Tutup' }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    @endif
 </body>
 
 </html>

@@ -129,6 +129,13 @@
         </table>
     </div>
 
+    @if(isset($storeStatus) && $storeStatus->is_tutup)
+    <div style="background-color: #fee2e2; border: 1px solid #ef4444; color: #b91c1c; padding: 10px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+        <strong>PEMBERITAHUAN:</strong> Toko tercatat <strong>TUTUP / LIBUR</strong> pada tanggal ini.<br>
+        <span style="font-size: 11px;">Alasan: {{ $storeStatus->catatan ?? '-' }}</span>
+    </div>
+    @endif
+
     <div class="section-title">RINGKASAN TRANSAKSI SISTEM</div>
     <table class="data-table">
         <tr>

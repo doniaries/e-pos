@@ -84,6 +84,15 @@ Route::get('/admin/toggle-store', function () {
             'is_toko_tutup' => !$setting->is_toko_tutup,
         ]);
 
+        // Record to store_statuses
+        \App\Models\StoreStatus::updateOrCreate(
+            ['tanggal' => now()->toDateString()],
+            [
+                'is_tutup' => $setting->is_toko_tutup,
+                'catatan' => $setting->is_toko_tutup ? ($setting->pesan_tutup ?? 'Toko Tutup') : 'Toko Buka',
+            ]
+        );
+
         $status = $setting->is_toko_tutup ? 'DITUTUP' : 'DIBUKA';
         return back()->with('notification', "Toko berhasil $status");
     }

@@ -21,4 +21,17 @@ class EditSetting extends EditRecord
     {
         return static::getResource()::getUrl('index');
     }
+
+    protected function afterSave(): void
+    {
+        $setting = $this->record;
+
+        \App\Models\StoreStatus::updateOrCreate(
+            ['tanggal' => now()->toDateString()],
+            [
+                'is_tutup' => $setting->is_toko_tutup,
+                'catatan' => $setting->is_toko_tutup ? ($setting->pesan_tutup ?? 'Toko Tutup') : 'Toko Buka',
+            ]
+        );
+    }
 }

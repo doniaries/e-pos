@@ -334,7 +334,11 @@ class PembelianResource extends Resource
                                 $logoPath = storage_path('app/public/' . $setting->logo);
                             }
 
-                            $pdf = Pdf::loadView('pdf.laporan-pembelian', compact('records', 'start', 'end', 'storeName', 'storeAddress', 'userName', 'logoPath'))
+                            $storeStatuses = \App\Models\StoreStatus::whereBetween('tanggal', [$data['dari'], $data['sampai']])
+                                ->where('is_tutup', true)
+                                ->get();
+
+                            $pdf = Pdf::loadView('pdf.laporan-pembelian', compact('records', 'start', 'end', 'storeName', 'storeAddress', 'userName', 'logoPath', 'storeStatuses'))
                                 ->setPaper('a4', 'landscape');
                             return response()->streamDownload(fn() => print($pdf->output()), 'laporan-pembelian.pdf');
                         } catch (\Exception $e) {

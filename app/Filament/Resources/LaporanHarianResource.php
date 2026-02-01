@@ -161,7 +161,8 @@ class LaporanHarianResource extends Resource
                     ->icon('heroicon-o-printer')
                     ->color('success')
                     ->action(function (LaporanHarian $record) {
-                        $pdf = Pdf::loadView('pdf.laporan-harian-detail', compact('record'));
+                        $storeStatus = \App\Models\StoreStatus::where('tanggal', $record->tanggal->toDateString())->first();
+                        $pdf = Pdf::loadView('pdf.laporan-harian-detail', compact('record', 'storeStatus'));
                         return response()->streamDownload(function () use ($pdf) {
                             echo $pdf->output();
                         }, "laporan-harian-" . \Illuminate\Support\Carbon::parse($record->tanggal)->format('Y-m-d') . ".pdf");
