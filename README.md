@@ -252,6 +252,123 @@ php artisan vendor:publish --tag=filament-developer-logins-translations
    - Catatan (opsional)
 5. Simpan - hutang akan otomatis berkurang
 
+### Sistem Hutang Member di POS
+
+#### 📌 Cara Kerja Hutang Member
+
+Member/pelanggan tetap memiliki **privilege khusus** untuk melakukan transaksi dengan sistem hutang:
+
+**Tipe Konsumen:**
+- **👤 Umum**: Pelanggan biasa - WAJIB bayar lunas
+- **⭐ Member**: Pelanggan tetap - BOLEH hutang (full atau sebagian)
+
+**Status Pembayaran:**
+| Status | Kondisi | Keterangan |
+|--------|---------|------------|
+| **Lunas** | Bayar ≥ Total | Tidak ada hutang |
+| **Bayar Sebagian** | 0 < Bayar < Total | Hutang = Total - Bayar |
+| **Hutang** | Bayar = 0 | Hutang = Total |
+
+#### 💡 Contoh Skenario
+
+**Skenario 1: Member Bayar Sebagian**
+```
+Total Belanja: Rp 100.000
+Bayar: Rp 50.000
+Hutang Baru: Rp 50.000
+Status: Bayar Sebagian
+```
+
+**Skenario 2: Member Full Hutang**
+```
+Total Belanja: Rp 150.000
+Bayar: Rp 0
+Hutang Baru: Rp 150.000
+Status: Hutang
+```
+
+**Skenario 3: Member Bayar Lunas**
+```
+Total Belanja: Rp 200.000
+Bayar: Rp 200.000
+Hutang Baru: Rp 0
+Status: Lunas
+```
+
+#### 🔄 Tracking Hutang Otomatis
+
+- Hutang tersimpan di kolom `hutang` tabel `pelanggans`
+- Hutang bersifat **kumulatif** (hutang lama + hutang baru)
+- Setiap transaksi member yang tidak lunas otomatis menambah hutang
+- Pembayaran hutang akan mengurangi total hutang member
+
+#### 📊 Melihat Hutang Member
+
+**Di Admin Panel:**
+1. Buka menu **Pelanggan**
+2. Lihat kolom **Hutang**
+3. Filter member dengan hutang > 0
+4. Klik member untuk detail transaksi
+
+**Di Database:**
+```sql
+-- Lihat semua member yang punya hutang
+SELECT kode_member, nama, hutang 
+FROM pelanggans 
+WHERE hutang > 0 
+ORDER BY hutang DESC;
+```
+
+### Barcode Scanner Fisik
+
+Aplikasi mendukung **barcode scanner fisik** (USB/Bluetooth) yang bekerja seperti keyboard:
+
+#### 🔌 Jenis Scanner yang Didukung
+
+- ✅ **USB Barcode Scanner** (plug and play)
+- ✅ **Bluetooth Barcode Scanner** (pair seperti keyboard)
+- ✅ **Wireless 2.4GHz Scanner** (dengan USB dongle)
+
+#### 📱 Setup Scanner
+
+**USB Scanner:**
+1. Colokkan scanner ke port USB
+2. Tunggu Windows mendeteksi (otomatis)
+3. Scanner siap digunakan
+
+**Bluetooth Scanner:**
+1. Nyalakan scanner
+2. Tekan tombol pairing
+3. Di Windows: Settings → Bluetooth & devices → Add device
+4. Pilih scanner dari daftar
+5. Scanner siap digunakan
+
+#### 💻 Cara Menggunakan
+
+1. Buka halaman **Produk** atau **POS**
+2. Kursor otomatis fokus di field barcode
+3. **Scan barcode** dengan scanner fisik
+4. Barcode otomatis terisi
+5. Tekan **Enter** atau **Tab**
+
+#### ⚙️ Konfigurasi Scanner (Opsional)
+
+**Enter Key Suffix:**
+- Scan barcode "Add Enter Suffix" di manual scanner
+- Scanner akan auto-tekan Enter setelah scan
+
+**Tab Key Suffix:**
+- Scan barcode "Add Tab Suffix" di manual scanner
+- Scanner akan auto-pindah ke field berikutnya
+
+#### 💰 Rekomendasi Scanner
+
+| Budget | Model | Harga | Fitur |
+|--------|-------|-------|-------|
+| **Budget** | Yongli XYL-901 | Rp 150k-300k | USB, 1D barcode |
+| **Mid-Range** | Honeywell Voyager 1200g | Rp 300k-500k | USB, 1D, reliable |
+| **Premium** | Zebra DS2208 | Rp 800k+ | USB, 2D, QR code |
+
 ## 📸 Screenshot
 
 ### 🖥️ Interface POS (Kasir)
@@ -392,7 +509,28 @@ Kontribusi selalu diterima! Silakan:
 
 ## 📝 Changelog
 
-### Version 1.0.0 (Current)
+### Version 1.1.0 (Latest)
+
+- ✅ **Sistem Hutang Member Lengkap**
+  - Member bisa hutang (full atau sebagian)
+  - Tracking hutang otomatis dan kumulatif
+  - Status pembayaran: Lunas, Bayar Sebagian, Hutang
+  - Pembayaran hutang dengan riwayat lengkap
+  - Validasi: Pelanggan Umum wajib bayar lunas
+
+- ✅ **Barcode Scanner Fisik**
+  - Support USB, Bluetooth, dan Wireless 2.4GHz scanner
+  - Plug and play - bekerja seperti keyboard
+  - Tidak perlu kamera atau HTTPS
+  - Instant scanning (<0.5 detik)
+  - Dokumentasi setup lengkap
+
+- ✅ **Perbaikan Tutup Hari**
+  - Fix error "Tidak ada transaksi penjualan untuk ditutup"
+  - Perhitungan tunai vs non-tunai dari tabel pembayarans
+  - Laporan PDF otomatis terdownload
+
+### Version 1.0.0
 
 - ✅ Sistem POS dengan barcode scanning
 - ✅ Manajemen produk multi-satuan
