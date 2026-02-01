@@ -118,6 +118,13 @@ class PelangganResource extends Resource
                     ->dateTime('d/m/Y H:i')
                     ->placeholder('-')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->getStateUsing(fn(Pelanggan $record): string => $record->hutang > 0 ? 'Berhutang' : 'Lunas')
+                    ->color(fn(string $state): string => match ($state) {
+                        'Berhutang' => 'danger',
+                        'Lunas' => 'success',
+                    }),
             ])
             ->defaultSort('tanggal_hutang_terakhir', 'desc')
             ->filters([

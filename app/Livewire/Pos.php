@@ -481,8 +481,7 @@ class Pos extends Component
 
         $debtAmount = $totalAmount - $paidAmount;
         if ($debtAmount > 0) {
-            \App\Models\Pelanggan::findOrFail($customerId)->update([
-                'hutang' => DB::raw("hutang + $debtAmount"),
+            \App\Models\Pelanggan::findOrFail($customerId)->increment('hutang', $debtAmount, [
                 'tanggal_hutang_terakhir' => now()
             ]);
         }
