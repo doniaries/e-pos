@@ -26,6 +26,20 @@
                 this.paymentMode = this.payment > 0 ? 'bayar' : 'hutang';
                 Livewire.on('transaction-success', () => { this.isProcessing = false; });
                 Livewire.on('pos-error', () => { this.isProcessing = false; });
+            },
+            get canSubmit() {
+                let p = parseInt(this.payment) || 0;
+                let t = parseInt(this.total) || 0;
+
+                if (this.customerType === 'pelanggan') {
+                    // Member
+                    if (this.paymentMode === 'hutang') return true; // Mode Hutang Penuh
+                    if (this.paymentMode === 'bayar') return p > 0; // Mode Bayar harus ada input
+                    return true;
+                } else {
+                    // Umum wajib lunas
+                    return p >= t;
+                }
             }
         }">
         <!-- Header -->
@@ -273,24 +287,22 @@
                     </svg>
                     Batal
                 </button>
-                <button @click="if(!isProcessing) { isProcessing = true; $wire.processSale(); }"
-                    wire:loading.attr="disabled"
-                    {{ !$this->canProcessSale() ? 'disabled' : '' }}
-                    :disabled="isProcessing"
+                <button @click="if(!isProcessing && canSubmit) { isProcessing = true; $wire.processSale(); }"
+                    :disabled="isProcessing || !canSubmit"
+                    :class="{'opacity-50 cursor-not-allowed': isProcessing || !canSubmit}"
                     type="button"
-                    class="flex-1 inline-flex justify-center items-center gap-3 rounded-xl border-2 border-transparent shadow-lg px-6 py-4 bg-green-600 hover:bg-green-700 text-xl font-black text-white focus:outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                    class="flex-1 inline-flex justify-center items-center gap-3 rounded-xl border-2 border-transparent shadow-lg px-6 py-4 bg-green-600 hover:bg-green-700 text-xl font-black text-white focus:outline-none transition-all">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     </svg>
                     <span x-show="!isProcessing">SELESAI</span>
                     <span x-show="isProcessing" class="animate-pulse">LOADING...</span>
                 </button>
-                <button @click="if(!isProcessing) { isProcessing = true; $wire.processAndPrint(); }"
-                    wire:loading.attr="disabled"
-                    {{ !$this->canProcessSale() ? 'disabled' : '' }}
-                    :disabled="isProcessing"
+                <button @click="if(!isProcessing && canSubmit) { isProcessing = true; $wire.processAndPrint(); }"
+                    :disabled="isProcessing || !canSubmit"
+                    :class="{'opacity-50 cursor-not-allowed': isProcessing || !canSubmit}"
                     type="button"
-                    class="flex-1 inline-flex justify-center items-center gap-3 rounded-xl border-2 border-transparent shadow-lg px-6 py-4 bg-blue-600 hover:bg-blue-700 text-xl font-black text-white focus:outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                    class="flex-1 inline-flex justify-center items-center gap-3 rounded-xl border-2 border-transparent shadow-lg px-6 py-4 bg-blue-600 hover:bg-blue-700 text-xl font-black text-white focus:outline-none transition-all">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
                     </svg>
