@@ -685,7 +685,13 @@ class PenjualanResource extends Resource
 
                             $pdf = Pdf::loadView('pdf.laporan-penjualan', compact('records', 'start', 'end', 'storeName', 'storeAddress', 'userName', 'logoPath', 'storeStatuses'))
                                 ->setPaper('a4', 'landscape');
-                            return response()->streamDownload(fn() => print($pdf->output()), 'laporan-penjualan.pdf');
+                            $filename = 'laporan-penjualan-' . $start;
+                            if ($start !== $end) {
+                                $filename .= '-sd-' . $end;
+                            }
+                            $filename .= '.pdf';
+
+                            return response()->streamDownload(fn() => print($pdf->output()), $filename);
                         } catch (\Exception $e) {
                             \Filament\Notifications\Notification::make()
                                 ->title('Gagal Cetak PDF')

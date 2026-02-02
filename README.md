@@ -530,10 +530,9 @@ Kontribusi selalu diterima! Silakan:
   - Perhitungan tunai vs non-tunai dari tabel pembayarans
   - Laporan PDF otomatis terdownload
 
-- ✅ **Fitur Tutup Toko Otomatis**
-  - Menutup toko secara otomatis pada pukul 23:59 WIB.
-  - Mengubah status toko di pengaturan menjadi "Tutup".
-  - Mencatat riwayat penutupan di `store_statuses`.
+- ✅ **Fitur Tutup Hari Transaksi Otomatis**
+  - Otomatis membuat Laporan Harian pada pukul 23:59 WIB.
+  - Merekap semua transaksi penjualan hari ini yang belum dilaporkan.
   - **Cara Setup:**
     - **Development:** Jalankan `php artisan schedule:work`.
     - **Production:** Tambahkan cron job `* * * * * php /path-to-project/artisan schedule:run >> /dev/null 2>&1`.
