@@ -74,3 +74,7 @@ Schedule::call(function () {
         Log::error('Gagal Tutup Hari Otomatis: ' . $e->getMessage());
     }
 })->dailyAt('23:59');
+
+if (class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) {
+    Schedule::command('telescope:prune')->daily();
+}
