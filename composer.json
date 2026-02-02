@@ -17,7 +17,6 @@
         "flowframe/laravel-trend": "^0.4.0",
         "laravel-lang/common": "^6.7",
         "laravel/framework": "^11.31",
-        "laravel/telescope": "^5.16",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
         "mike42/escpos-php": "^4.0",
@@ -31,6 +30,7 @@
         "laravel/pail": "^1.1",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.26",
+        "laravel/telescope": "^5.16",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.1",
         "phpunit/phpunit": "^11.0.1"

@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             ProdukSeeder::class,
             // StokSeeder::class, // Diganti otomatis via PembelianSeeder + Observer
             DistributorSeeder::class,
+            PelangganSeeder::class,
             PembelianSeeder::class,
             PenjualanSeeder::class, // 90 transaksi: 50 (2 hari lalu) + 40 (hari ini)
         ]);

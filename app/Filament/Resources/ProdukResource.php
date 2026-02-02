@@ -275,10 +275,7 @@ class ProdukResource extends Resource
                     ->description(fn($state) => $state > 4 ? 'Tersedia' : ($state > 0 ? 'Stok Rendah' : 'Habis'))
                     ->tooltip(fn($state) => $state > 4 ? 'Stok produk di gudang masih mencukupi' : ($state > 0 ? 'Peringatan: Stok menipis, segera re-stok produk ini!' : 'Bahaya: Stok kosong! Unit tidak bisa dijual.'))
                     ->alignment('center'),
-                Tables\Columns\ImageColumn::make('gambar_produk')
-                    ->label('Foto')
-                    ->circular()
-                    ->toggleable(isToggledHiddenByDefault: true),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

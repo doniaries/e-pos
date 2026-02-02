@@ -30,12 +30,6 @@ return new class extends Migration
             $table->string('gambar_produk')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
-            // Indexes
-            $table->index('kategori_produk_id');
-            $table->index('satuan_id');
-            $table->index(['stok', 'id']);
-            $table->index(['created_at', 'id']);
         });
     }
 
