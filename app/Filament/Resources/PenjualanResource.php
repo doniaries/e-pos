@@ -685,11 +685,19 @@ class PenjualanResource extends Resource
 
                             $pdf = Pdf::loadView('pdf.laporan-penjualan', compact('records', 'start', 'end', 'storeName', 'storeAddress', 'userName', 'logoPath', 'storeStatuses'))
                                 ->setPaper('a4', 'landscape');
+                            $shiftName = 'semua-shift';
+                            if (!empty($data['shift_id'])) {
+                                $shift = \App\Models\Shift::find($data['shift_id']);
+                                if ($shift) {
+                                    $shiftName = 'shift-' . \Illuminate\Support\Str::slug($shift->nama);
+                                }
+                            }
+
                             $filename = 'laporan-penjualan-' . $start;
                             if ($start !== $end) {
                                 $filename .= '-sd-' . $end;
                             }
-                            $filename .= '.pdf';
+                            $filename .= '-' . $shiftName . '.pdf';
 
                             return response()->streamDownload(fn() => print($pdf->output()), $filename);
                         } catch (\Exception $e) {
