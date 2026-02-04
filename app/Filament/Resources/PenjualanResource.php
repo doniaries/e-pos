@@ -537,7 +537,7 @@ class PenjualanResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->poll('3s')
+            ->poll('3s') //hot reload data
             ->columns([
                 Tables\Columns\TextColumn::make('nomor')
                     ->label('No Invoice')
