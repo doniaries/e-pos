@@ -16,7 +16,8 @@ class Pembayaran extends Model
         'nomor_kartu',
         'bank',
         'bukti_pembayaran',
-        'catatan'
+        'catatan',
+        'keterangan'
     ];
 
     protected $casts = [

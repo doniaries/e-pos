@@ -17,6 +17,7 @@ use Livewire\WithPagination;
 class Pos extends Component
 {
     use WithPagination;
+    use \Livewire\WithFileUploads;
 
     // public $scanBarcode = ''; // Removed: using searchQuery for everything now
     public $cart = [];
@@ -28,6 +29,10 @@ class Pos extends Component
     public $change = 0;
     public $showPaymentModal = false;
     public $showWarningOldTransactions = false;
+
+    // New payment details
+    public $paymentReference = '';
+    public $paymentProof;
 
     // public $produks; // Removed to improve performance (now a computed property)
     public $showProductTable = false;
@@ -407,11 +412,19 @@ class Pos extends Component
                         $produk->decrement('stok', $item['quantity']);
                     }
 
+                    // Handle File Upload
+                    $buktiPath = null;
+                    if ($this->paymentProof) {
+                        $buktiPath = $this->paymentProof->store('bukti_pembayaran', 'public');
+                    }
+
                     Pembayaran::create([
                         'penjualan_id' => $penjualan->id,
                         'metode' => strtolower($this->paymentMethod),
                         'jumlah' => $this->payment,
-                        'catatan' => 'Pembayaran POS'
+                        'catatan' => 'Pembayaran POS',
+                        'keterangan' => $this->paymentReference,
+                        'bukti_pembayaran' => $buktiPath
                     ]);
 
                     DB::commit();
@@ -433,7 +446,6 @@ class Pos extends Component
 
             $this->showPaymentModal = false;
             $this->resetCart();
-
             $this->dispatch('transaction-success', [
                 'nomor' => $penjualan->nomor ?? ''
             ]);
@@ -489,7 +501,14 @@ class Pos extends Component
 
     public function resetCart()
     {
-        $this->reset(['cart', 'grandTotal', 'payment', 'change', 'customerType', 'customer', 'activeSaleId']);
+        $this->reset(['cart', 'grandTotal', 'payment', 'change', 'customerType', 'customer', 'activeSaleId', 'paymentReference', 'paymentProof']);
+    }
+
+    public function updatedPaymentMethod($value)
+    {
+        if ($value !== 'tunai') {
+            $this->payment = $this->grandTotal;
+        }
     }
 
     public function updatedPayment() // Tambahkan method ini

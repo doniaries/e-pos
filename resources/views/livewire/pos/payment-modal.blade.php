@@ -195,6 +195,37 @@
                             </button>
                             @endforeach
                         </div>
+
+                        {{-- Payment Reference & Proof (Member) --}}
+                        <div class="mt-4 grid grid-cols-1 gap-4" x-show="$wire.paymentMethod !== 'tunai'" x-transition>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1.5">Keterangan / Nama Bank</label>
+                                <input type="text" wire:model="paymentReference"
+                                    class="w-full px-4 py-3 bg-white dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 rounded-xl font-bold text-gray-800 dark:text-gray-100 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder-gray-400"
+                                    placeholder="Contoh: BCA, Mandiri, GoPay...">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1.5">Bukti Pembayaran (Opsional)</label>
+                                <div class="relative group">
+                                    <input type="file" wire:model="paymentProof" accept="image/*"
+                                        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all border dark:border-gray-600 rounded-xl p-2 bg-gray-50 dark:bg-gray-700/50">
+
+                                    <div wire:loading wire:target="paymentProof" class="mt-2 text-xs text-blue-600 font-bold flex items-center gap-1">
+                                        <svg class="animate-spin h-3 w-3 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        Uploading...
+                                    </div>
+
+                                    @if ($paymentProof)
+                                    <div class="mt-2 relative w-full h-32 rounded-lg overflow-hidden border border-gray-200">
+                                        <img src="{{ $paymentProof->temporaryUrl() }}" class="w-full h-full object-cover">
+                                    </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 @else
@@ -209,6 +240,37 @@
                         </button>
                         @endforeach
                     </div>
+
+                    {{-- Payment Reference & Proof (Umum) --}}
+                    <div class="mt-4 grid grid-cols-1 gap-4" x-show="$wire.paymentMethod !== 'tunai'" x-transition>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1.5">Keterangan / Nama Bank</label>
+                            <input type="text" wire:model="paymentReference"
+                                class="w-full px-4 py-3 bg-white dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 rounded-xl font-bold text-gray-800 dark:text-gray-100 focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder-gray-400"
+                                placeholder="Contoh: BCA, Mandiri, GoPay...">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1.5">Bukti Pembayaran (Opsional)</label>
+                            <div class="relative group">
+                                <input type="file" wire:model="paymentProof" accept="image/*"
+                                    class="block w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all border dark:border-gray-600 rounded-xl p-2 bg-gray-50 dark:bg-gray-700/50">
+
+                                <div wire:loading wire:target="paymentProof" class="mt-2 text-xs text-blue-600 font-bold flex items-center gap-1">
+                                    <svg class="animate-spin h-3 w-3 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    Uploading...
+                                </div>
+
+                                @if ($paymentProof)
+                                <div class="mt-2 relative w-full h-32 rounded-lg overflow-hidden border border-gray-200">
+                                    <img src="{{ $paymentProof->temporaryUrl() }}" class="w-full h-full object-cover">
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 @endif
 
@@ -217,9 +279,9 @@
 
 
             <!-- Payment Input & Change Display -->
-            <div x-show="!isMember || paymentMode === 'bayar'" x-transition class="grid grid-cols-2 gap-4">
+            <div x-show="(!isMember || paymentMode === 'bayar') && $wire.paymentMethod === 'tunai'" x-transition class="grid grid-cols-2 gap-4">
                 <!-- Uang Input -->
-                <div x-show="!isMember || paymentMode === 'bayar'">
+                <div>
                     <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1.5">UANG INPUT</label>
 
                     {{-- Member Hint --}}
