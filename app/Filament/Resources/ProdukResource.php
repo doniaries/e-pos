@@ -294,6 +294,16 @@ class ProdukResource extends Resource
                     ->preload(),
                 Tables\Filters\TrashedFilter::make(),
             ])
+            ->headerActions([
+                Tables\Actions\Action::make('download_template')
+                    ->label('Download Template')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->color('success')
+                    ->action(fn() => \Maatwebsite\Excel\Facades\Excel::download(
+                        new \App\Exports\ProductTemplateExport,
+                        'template_produk.xlsx'
+                    )),
+            ])
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->modalWidth(MaxWidth::SixExtraLarge)

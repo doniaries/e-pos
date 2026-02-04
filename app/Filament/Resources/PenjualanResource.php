@@ -628,6 +628,11 @@ class PenjualanResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->headerActions([
+                Tables\Actions\Action::make('refresh')
+                    ->label('Refresh')
+                    ->icon('heroicon-o-arrow-path')
+                    ->color('gray')
+                    ->action(fn($livewire) => $livewire->dispatch('$refresh')),
                 Tables\Actions\Action::make('cetak')
                     ->label('Cetak PDF')
                     ->icon('heroicon-o-printer')
