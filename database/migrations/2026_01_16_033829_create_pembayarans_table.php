@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('pembayarans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('penjualan_id')->constrained('penjualans')->cascadeOnDelete();
-            $table->string('metode'); // tunai, transfer, qris, debit
+            $table->string('metode'); // tunai, transfer
             $table->decimal('jumlah', 15, 2);
             $table->text('catatan')->nullable();
             $table->softDeletes();

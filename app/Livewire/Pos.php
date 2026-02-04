@@ -363,6 +363,8 @@ class Pos extends Component
                             'total' => $this->grandTotal,
                             'bayar' => $this->payment,
                             'kembali' => $this->change,
+                            'metode_pembayaran' => strtolower($this->paymentMethod),
+                            'nama_bank' => $this->paymentReference,
                             'status_pembayaran' => $paymentStatus,
                             'status' => Penjualan::STATUS_COMPLETED,
                             'user_id' => auth()->id(),
@@ -382,6 +384,8 @@ class Pos extends Component
                             'total' => $this->grandTotal,
                             'bayar' => $this->payment,
                             'kembali' => $this->change,
+                            'metode_pembayaran' => strtolower($this->paymentMethod),
+                            'nama_bank' => $this->paymentReference,
                             'status_pembayaran' => $paymentStatus,
                             'status' => Penjualan::STATUS_COMPLETED
                         ]);

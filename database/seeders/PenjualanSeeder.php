@@ -98,14 +98,10 @@ class PenjualanSeeder extends Seeder
                 }
             }
 
-            // Metode pembayaran (60% tunai, 30% qris, 10% transfer)
+            // Metode pembayaran (70% tunai, 30% transfer)
             $rand = rand(1, 100);
-            if ($rand <= 60) {
+            if ($rand <= 70) {
                 $metodePembayaran = 'tunai';
-                $namaBank = null;
-                $nomorRekening = null;
-            } elseif ($rand <= 90) {
-                $metodePembayaran = 'qris';
                 $namaBank = null;
                 $nomorRekening = null;
             } else {

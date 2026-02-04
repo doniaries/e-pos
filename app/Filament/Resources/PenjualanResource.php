@@ -320,8 +320,6 @@ class PenjualanResource extends Resource
                                         ->options([
                                             'tunai' => 'Tunai',
                                             'transfer' => 'Transfer',
-                                            'qris' => 'QRIS',
-                                            'kartu_debit' => 'Kartu Debit',
                                         ])
                                         ->default('tunai')
                                         ->live(),
@@ -330,7 +328,7 @@ class PenjualanResource extends Resource
                                         Forms\Components\TextInput::make('nama_bank')
                                             ->label('Nama Bank')
                                             ->placeholder('BCA')
-                                            ->visible(fn(Forms\Get $get) => in_array($get('metode_pembayaran'), ['transfer', 'kartu_debit'])),
+                                            ->visible(fn(Forms\Get $get) => $get('metode_pembayaran') === 'transfer'),
                                         Forms\Components\TextInput::make('nomor_rekening')
                                             ->label('No. Ref / Kartu')
                                             ->placeholder('1234xxxx')
@@ -550,12 +548,18 @@ class PenjualanResource extends Resource
                 Tables\Columns\TextColumn::make('pelanggan.nama')
                     ->label('Pelanggan')
                     ->default('Umum')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('pelanggan')
-                    ->label('Pelanggan Tetap')
+                    ->searchable()
+                    ->description(fn($record) => $record->pelanggan ? 'Member: ' . $record->pelanggan->kode_member : null),
+
+                Tables\Columns\TextColumn::make('metode_pembayaran')
+                    ->label('Cara Bayar')
                     ->badge()
-                    ->formatStateUsing(fn($record) => $record->pelanggan ? 'Pelanggan Tetap' : 'Umum')
-                    ->color(fn($record) => $record->pelanggan ? 'success' : 'gray'),
+                    ->color('info')
+                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                        'tunai' => 'Tunai',
+                        'transfer' => 'Transfer',
+                        default => ucfirst($state),
+                    }),
                 Tables\Columns\TextColumn::make('shift.nama')
                     ->label('Shift')
                     ->badge()
@@ -794,6 +798,7 @@ class PenjualanResource extends Resource
                 'total',
                 'bayar',
                 'kembali',
+                'metode_pembayaran',
                 'status_pembayaran',
                 'created_at'
             ])

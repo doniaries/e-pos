@@ -188,7 +188,7 @@
                     <div x-show="paymentMode === 'bayar'" x-transition class="mt-4">
                         <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1.5">Metode Pembayaran</label>
                         <div class="grid grid-cols-4 gap-2">
-                            @foreach(['tunai' => '💵 Tunai', 'transfer' => '🏦 Transfer', 'qris' => '📱 QRIS', 'kartu_debit' => '💳 Debit'] as $val => $label)
+                            @foreach(['tunai' => '💵 Tunai', 'transfer' => '🏦 Transfer'] as $val => $label)
                             <button wire:click="$set('paymentMethod', '{{ $val }}')"
                                 class="px-4 py-3 text-base rounded-lg border-2 transition-all font-bold {{ $paymentMethod === $val ? 'bg-blue-50 border-blue-500 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300' : 'bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:border-gray-300' }}">
                                 {{ $label }}
@@ -233,7 +233,7 @@
                 <div class="col-span-2">
                     <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1.5">Metode Pembayaran</label>
                     <div class="grid grid-cols-4 gap-2">
-                        @foreach(['tunai' => '💵 Tunai', 'transfer' => '🏦 Transfer', 'qris' => '📱 QRIS', 'kartu_debit' => '💳 Debit'] as $val => $label)
+                        @foreach(['tunai' => '💵 Tunai', 'transfer' => '🏦 Transfer'] as $val => $label)
                         <button wire:click="$set('paymentMethod', '{{ $val }}')"
                             class="px-4 py-3 text-base rounded-lg border-2 transition-all font-bold {{ $paymentMethod === $val ? 'bg-blue-50 border-blue-500 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300' : 'bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:border-gray-300' }}">
                             {{ $label }}

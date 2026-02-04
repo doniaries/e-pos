@@ -174,8 +174,6 @@ class PelangganResource extends Resource
                             ->options([
                                 'tunai' => 'Tunai',
                                 'transfer' => 'Transfer',
-                                'qris' => 'QRIS',
-                                'debit' => 'Kartu Debit',
                             ])
                             ->default('tunai')
                             ->required(),

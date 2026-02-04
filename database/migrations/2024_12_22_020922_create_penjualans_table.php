@@ -32,7 +32,7 @@ class CreatePenjualansTable extends Migration
             $table->decimal('total', 10, 0); // total akhir
 
             // Penggabungan dari tabel pembayaran
-            $table->enum('metode_pembayaran', ['tunai', 'transfer', 'qris', 'kartu_debit'])->default('tunai');
+            $table->enum('metode_pembayaran', ['tunai', 'transfer'])->default('tunai');
             $table->decimal('bayar', 10, 0)->default(0); // Uang yang diterima
             $table->decimal('kembali', 10, 0)->default(0); // Uang kembalian, jika bayar > total
 

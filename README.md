@@ -43,7 +43,7 @@ developed by : Don Borland
   - Interface khusus kasir yang user-friendly
   - Barcode scanning dengan sound effect
   - Kalkulasi otomatis (subtotal, diskon, pajak, kembalian)
-  - Multiple metode pembayaran (Tunai, QRIS, Transfer, Debit)
+  - Multiple metode pembayaran (Tunai, Transfer)
   - Split payment (sebagian tunai + sebagian transfer)
   - Diskon fleksibel (persen atau nominal)
   - Cetak struk otomatis
@@ -379,7 +379,7 @@ Interface POS yang modern dan user-friendly dengan fitur barcode scanning, multi
 **Fitur yang terlihat:**
 - Search barcode/produk
 - Kategori produk (Draft, Produk, Riwayat, Tutup Hari)
-- Multiple metode pembayaran (Tunai, Transfer, QRIS, Debit)
+- Multiple metode pembayaran (Tunai, Transfer)
 - Nominal bayar dengan quick input (50rb, 100rb, 150rb, 200rb)
 - Tombol "Selesai & Cetak"
 - Total belanja real-time
