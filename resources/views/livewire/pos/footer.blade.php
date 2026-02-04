@@ -67,7 +67,7 @@
         </div>
 
         <!-- F10: Tutup Hari -->
-        <div @click="showCloseDayModal = !showCloseDayModal"
+        <div @click="$wire.openCloseDayModal()"
             class="relative group flex flex-col md:flex-row items-center justify-center md:justify-start gap-0.5 md:gap-1.5 opacity-80 hover:opacity-100 transition-all cursor-pointer hover:bg-slate-800 px-2 py-1.5 md:py-1 rounded-md active:scale-95">
             <div class="flex items-center gap-1">
                 <svg class="w-4 h-4 md:w-5 md:h-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">

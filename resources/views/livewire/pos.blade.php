@@ -69,7 +69,7 @@
     @keydown.window.f4.prevent="$wire.pendingTransaction()"
     @keydown.window.f8.prevent="showHistoryModal = !showHistoryModal"
     @keydown.window.f9.prevent="showPendingModal = !showPendingModal"
-    @keydown.window.f10.prevent="showCloseDayModal = !showCloseDayModal"
+    @keydown.window.f10.prevent="$wire.openCloseDayModal()"
     @keydown.window.f11.prevent="toggleFullScreen()"
     @keydown.window.f12.prevent="$wire.resetCart()"
     @keydown.window.enter.prevent="if(!$wire.showPaymentModal && !showProductTable && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) $wire.openPaymentModal(); else if($wire.showPaymentModal && !isProcessing) { isProcessing = true; $wire.processAndPrint(); }"
@@ -786,7 +786,7 @@
                 </div>
 
                 <div class="bg-white px-8 pb-10">
-                    <button @click="showWarningOldTransactions = false; showCloseDayModal = true"
+                    <button @click="showWarningOldTransactions = false; $wire.openCloseDayModal()"
                         class="w-full bg-black hover:bg-gray-800 active:scale-[0.97] text-white px-8 py-4 rounded-2xl font-black text-base shadow-2xl shadow-black/10 transition-all flex items-center justify-center gap-2">
                         <span>Lakukan Tutup Hari</span>
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

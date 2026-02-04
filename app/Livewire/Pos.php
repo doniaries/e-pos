@@ -550,11 +550,20 @@ class Pos extends Component
         $totalNonCash = 0;
 
         foreach ($pendingSales as $sale) {
-            foreach ($sale->pembayarans as $payment) {
-                if (strtolower($payment->metode) === 'tunai') {
-                    $totalCash += $payment->jumlah;
+            if ($sale->pembayarans->count() > 0) {
+                foreach ($sale->pembayarans as $payment) {
+                    if (strtolower($payment->metode) === 'tunai') {
+                        $totalCash += $payment->jumlah;
+                    } else {
+                        $totalNonCash += $payment->jumlah;
+                    }
+                }
+            } else {
+                // Fallback jika tidak ada data pembayaran (misal data seeder atau lama)
+                if (strtolower($sale->metode_pembayaran) === 'tunai') {
+                    $totalCash += $sale->total;
                 } else {
-                    $totalNonCash += $payment->jumlah;
+                    $totalNonCash += $sale->total;
                 }
             }
         }

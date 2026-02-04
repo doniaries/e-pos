@@ -205,6 +205,17 @@ class PenjualanSeeder extends Seeder
                 'kembali' => $kembali,
                 'status_pembayaran' => $statusPembayaran,
             ]);
+
+            // Create Pembayaran record if payment was made
+            if ($bayar > 0) {
+                \App\Models\Pembayaran::create([
+                    'penjualan_id' => $penjualan->id,
+                    'metode' => $metodePembayaran,
+                    'jumlah' => $bayar,
+                    'catatan' => 'Seeded Payment',
+                    'keterangan' => $metodePembayaran == 'transfer' ? "$namaBank - $nomorRekening" : null,
+                ]);
+            }
         }
     }
 }
