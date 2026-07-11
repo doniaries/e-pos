@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Settings\Tables;
 
+use Filament\Forms;
+
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Columns;

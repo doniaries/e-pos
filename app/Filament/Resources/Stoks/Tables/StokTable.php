@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Filament\Resources\Stoks\Tables;
+
+use Filament\Forms;
 use Illuminate\Database\Eloquent\Builder;
 
 use Filament\Tables;
