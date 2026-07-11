@@ -6,7 +6,7 @@ use App\Filament\Resources\PenjualanDetailResource\Pages;
 use App\Filament\Resources\PenjualanDetailResource\RelationManagers;
 use App\Models\PenjualanDetail;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Forms\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -25,10 +25,9 @@ class PenjualanDetailResource extends Resource
         return false;
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema->schema([
                 Forms\Components\TextInput::make('penjualan_id')
                     ->required()
                     ->numeric(),

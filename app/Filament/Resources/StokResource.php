@@ -6,7 +6,7 @@ use App\Filament\Resources\StokResource\Pages;
 use App\Filament\Resources\StokResource\RelationManagers;
 use App\Models\Stok;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Forms\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -35,10 +35,9 @@ class StokResource extends Resource
         return !(\App\Models\Setting::first()?->is_toko_tutup ?? false);
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema->schema([
                 Forms\Components\Group::make()
                     ->schema([
                         Forms\Components\Section::make('Detail Transaksi Stok')

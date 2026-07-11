@@ -6,7 +6,7 @@ use App\Filament\Resources\SettingResource\Pages;
 use App\Filament\Resources\SettingResource\RelationManagers;
 use App\Models\Setting;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Forms\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -30,10 +30,9 @@ class SettingResource extends Resource
         return Setting::count() < 1;
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema->schema([
                 Forms\Components\TextInput::make('nama_perusahaan')
                     ->label('Nama Perusahaan')
                     ->autofocus()

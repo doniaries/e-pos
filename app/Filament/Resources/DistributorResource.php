@@ -6,7 +6,7 @@ use App\Filament\Resources\DistributorResource\Pages;
 use App\Filament\Resources\DistributorResource\RelationManagers;
 use App\Models\Distributor;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Forms\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -21,10 +21,9 @@ class DistributorResource extends Resource
     protected static ?string $navigationGroup = 'Master Data';
     protected static ?int $navigationSort = 6;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema->schema([
                 Forms\Components\TextInput::make('kode_distributor')
                     ->required()
                     ->maxLength(255),

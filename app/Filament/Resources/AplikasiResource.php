@@ -6,7 +6,7 @@ use App\Filament\Resources\AplikasiResource\Pages;
 use App\Filament\Resources\AplikasiResource\RelationManagers;
 use App\Models\Aplikasi;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Forms\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -33,10 +33,9 @@ class AplikasiResource extends Resource
     }
 
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema->schema([
                 Forms\Components\Section::make()
                     ->schema([
                         Forms\Components\TextInput::make('nama_aplikasi')

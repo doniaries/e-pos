@@ -7,7 +7,7 @@ use App\Filament\Resources\LaporanHarianResource\RelationManagers;
 use App\Filament\Resources\LaporanHarianResource\RelationManagers\PenjualansRelationManager;
 use App\Models\LaporanHarian;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Forms\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -34,10 +34,9 @@ class LaporanHarianResource extends Resource
         return false;
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema->schema([
                 Forms\Components\Section::make('Informasi Tutup Buku')
                     ->schema([
                         Forms\Components\DatePicker::make('tanggal')

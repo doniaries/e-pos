@@ -5,7 +5,7 @@ namespace App\Filament\Resources;
 use Filament\Forms;
 use App\Models\User;
 use Filament\Tables;
-use Filament\Forms\Form;
+use Filament\Forms\Schema;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Illuminate\Support\Facades\Hash;
@@ -23,10 +23,9 @@ class UserResource extends Resource
     protected static ?string $navigationGroup = 'Pengaturan';
     protected static ?int $navigationSort = 3;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema->schema([
                 Forms\Components\TextInput::make('name')
                     ->unique(ignoreRecord: true)
                     ->required()

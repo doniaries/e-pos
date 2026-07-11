@@ -5,7 +5,7 @@ namespace App\Filament\Resources;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Produk;
-use Filament\Forms\Form;
+use Filament\Forms\Schema;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 use Filament\Resources\Resource;
@@ -35,10 +35,9 @@ class ProdukResource extends Resource
     }
     protected static ?int $navigationSort = 1;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema->schema([
                 Forms\Components\Tabs::make('Produk Tabs')
                     ->tabs([
                         Forms\Components\Tabs\Tab::make('Detail Produk')

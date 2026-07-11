@@ -8,7 +8,7 @@ use App\Models\PembayaranHutangMember;
 use App\Filament\Resources\PelangganResource\RelationManagers\PembayaranHutangRelationManager;
 use App\Filament\Resources\PelangganResource\RelationManagers\PenjualansRelationManager;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Forms\Schema;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -29,10 +29,9 @@ class PelangganResource extends Resource
     protected static ?string $navigationGroup = 'Master Data';
     protected static ?int $navigationSort = 5;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema->schema([
                 Forms\Components\Section::make('Data Member')
                     ->description('Informasi identitas pelanggan tetap (member).')
                     ->schema([

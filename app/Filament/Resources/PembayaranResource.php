@@ -6,7 +6,7 @@ use App\Filament\Resources\PembayaranResource\Pages;
 use App\Filament\Resources\PembayaranResource\RelationManagers;
 use App\Models\Pembayaran;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Forms\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -26,10 +26,9 @@ class PembayaranResource extends Resource
         return !(\App\Models\Setting::first()?->is_toko_tutup ?? false);
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema->schema([
                 Forms\Components\TextInput::make('penjualan_id')
                     ->required()
                     ->numeric(),

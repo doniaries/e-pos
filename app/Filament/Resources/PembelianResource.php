@@ -6,7 +6,7 @@ use App\Filament\Resources\PembelianResource\Pages;
 use App\Filament\Resources\PembelianResource\RelationManagers;
 use App\Models\Pembelian;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Forms\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -33,10 +33,9 @@ class PembelianResource extends Resource
         return !(\App\Models\Setting::first()?->is_toko_tutup ?? false);
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema->schema([
                 Forms\Components\Group::make()
                     ->schema([
                         Forms\Components\Section::make('Informasi Pembelian')

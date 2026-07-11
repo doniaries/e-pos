@@ -9,7 +9,7 @@ use App\Models\Produk;
 use App\Models\Pelanggan;
 use Filament\Resources\Resource;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Forms\Schema;
 use Filament\Tables\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
@@ -158,10 +158,9 @@ class PenjualanResource extends Resource
             ]);
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema->schema([
                 Forms\Components\Grid::make(12)
                     ->schema([
                         // Header Section - Span 12 columns

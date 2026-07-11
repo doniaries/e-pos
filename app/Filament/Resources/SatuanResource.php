@@ -5,7 +5,7 @@ namespace App\Filament\Resources;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Satuan;
-use Filament\Forms\Form;
+use Filament\Forms\Schema;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Illuminate\Support\Facades\Cache;
@@ -22,10 +22,9 @@ class SatuanResource extends Resource
     protected static ?string $navigationGroup = 'Master Data';
     protected static ?int $navigationSort = 4;
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema->schema([
                 Forms\Components\TextInput::make('nama')
                     ->unique(ignoreRecord: true)
                     ->autofocus()

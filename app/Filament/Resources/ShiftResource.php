@@ -6,7 +6,7 @@ use App\Filament\Resources\ShiftResource\Pages;
 use App\Filament\Resources\ShiftResource\RelationManagers;
 use App\Models\Shift;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Forms\Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -25,10 +25,9 @@ class ShiftResource extends Resource
     protected static ?string $navigationLabel = 'Jadwal Shift';
     protected static ?string $pluralLabel = 'Jadwal Shift';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema->schema([
                 Forms\Components\Section::make('Informasi Shift')
                     ->schema([
                         Forms\Components\TextInput::make('nama')
