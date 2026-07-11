@@ -32,7 +32,7 @@ class ProdukTable
                     ->label('Harga Beli')
                     ->alignRight()
                     ->color('info')
-                    ->formatStateUsing(fn($state) => 'Rp ' . number_format(self::formatCurrency($state), 0, ',', '.'))
+                    ->formatStateUsing(fn($state) => 'Rp ' . number_format($state, 0, ',', '.'))
                     ->sortable(),
                 Tables\Columns\TextColumn::make('harga_jual')
                     ->label('Harga (Jual/Grosir)')
