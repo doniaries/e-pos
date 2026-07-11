@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Filament\Resources\Penjualans\Tables;
+use App\Models\Penjualan;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Filament\Forms;
 use Illuminate\Database\Eloquent\Builder;
 
 use Filament\Tables;
@@ -162,7 +165,9 @@ class PenjualanTable
                             $setting = \App\Models\Setting::first();
                             $storeName = $setting->nama_perusahaan ?? 'POS System';
                             $storeAddress = $setting->alamat ?? 'Alamat Toko Belum Diatur';
-                            $userName = auth()->user()?->name ?? 'System';
+                            /** @var \App\Models\User|null $user */
+                            $user = \Illuminate\Support\Facades\Auth::user();
+                            $userName = $user?->name ?? 'System';
 
                             $logoPath = public_path('images/logo e-pos.png');
                             if ($setting && $setting->logo && file_exists(storage_path('app/public/' . $setting->logo))) {

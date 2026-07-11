@@ -19,7 +19,7 @@ return new class extends Migration
         $this->addIndexIfNotExists('pembayarans', 'tanggal');
     }
 
-    private function addIndexIfNotExists($table, $column)
+    private function addIndexIfNotExists(string $table, string $column): void
     {
         try {
             Schema::table($table, function (Blueprint $t) use ($column) {
