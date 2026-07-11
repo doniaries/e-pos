@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Filament\Resources\Penjualans\Tables;
+use Illuminate\Database\Eloquent\Builder;
 
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -13,6 +14,7 @@ class PenjualanTable
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['kasir', 'pelanggan', 'shift']))
             ->poll('3s') //hot reload data
             ->columns([
                 Tables\Columns\TextColumn::make('nomor')

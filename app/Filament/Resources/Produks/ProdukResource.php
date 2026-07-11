@@ -25,6 +25,7 @@ use Filament\Support\Enums\MaxWidth;
 class ProdukResource extends Resource
 {
     protected static ?string $model = Produk::class;
+    protected static ?string $slug = 'produks';
 
     protected static ?string $navigationIcon = 'heroicon-o-cube';
     protected static ?string $navigationGroup = 'Master Data';

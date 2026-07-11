@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class AplikasiResource extends Resource
 {
     protected static ?string $model = Aplikasi::class;
+    protected static ?string $slug = 'aplikasis';
 
     protected static ?string $navigationLabel = 'Pengaturan Aplikasi';
     protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';

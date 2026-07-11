@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 class PelangganResource extends Resource
 {
     protected static ?string $model = Pelanggan::class;
+    protected static ?string $slug = 'pelanggans';
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
     protected static ?string $navigationLabel = 'Pelanggan';

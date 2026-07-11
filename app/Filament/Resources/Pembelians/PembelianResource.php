@@ -17,6 +17,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class PembelianResource extends Resource
 {
     protected static ?string $model = Pembelian::class;
+    protected static ?string $slug = 'pembelians';
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
     protected static ?string $navigationLabel = 'Pembelian Produk';

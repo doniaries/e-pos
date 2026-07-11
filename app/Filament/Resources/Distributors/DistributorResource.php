@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class DistributorResource extends Resource
 {
     protected static ?string $model = Distributor::class;
+    protected static ?string $slug = 'distributors';
 
     protected static ?string $navigationIcon = 'heroicon-o-truck';
     protected static ?string $navigationGroup = 'Master Data';

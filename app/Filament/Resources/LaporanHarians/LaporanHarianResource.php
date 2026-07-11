@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Auth;
 class LaporanHarianResource extends Resource
 {
     protected static ?string $model = LaporanHarian::class;
+    protected static ?string $slug = 'laporan-harians';
 
     protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
     protected static ?string $navigationGroup = 'Transaksi';

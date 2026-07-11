@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Filament\Resources\PenjualanDetails\Tables;
+use Illuminate\Database\Eloquent\Builder;
 
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -13,6 +14,7 @@ class PenjualanDetailTable
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['penjualan', 'produk', 'satuan']))
             ->columns([
                 Tables\Columns\TextColumn::make('penjualan.nomor')
                     ->label('No. Invoice')

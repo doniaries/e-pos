@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Filament\Resources\Stoks\Tables;
+use Illuminate\Database\Eloquent\Builder;
 
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -13,6 +14,7 @@ class StokTable
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['produk', 'user', 'shift']))
             ->columns([
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Tanggal')

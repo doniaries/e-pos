@@ -17,6 +17,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class StokResource extends Resource
 {
     protected static ?string $model = Stok::class;
+    protected static ?string $slug = 'stoks';
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
     protected static ?string $navigationLabel = 'Stok';

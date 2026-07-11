@@ -17,6 +17,7 @@ use App\Filament\Resources\KategoriProduks\RelationManagers;
 class KategoriProdukResource extends Resource
 {
     protected static ?string $model = KategoriProduk::class;
+    protected static ?string $slug = 'kategori-produks';
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
     protected static ?string $navigationGroup = 'Master Data';

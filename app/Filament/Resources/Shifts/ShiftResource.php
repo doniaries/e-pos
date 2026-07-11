@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class ShiftResource extends Resource
 {
     protected static ?string $model = Shift::class;
+    protected static ?string $slug = 'shifts';
 
     protected static ?string $navigationIcon = 'heroicon-o-clock';
     protected static ?string $navigationGroup = 'Transaksi';

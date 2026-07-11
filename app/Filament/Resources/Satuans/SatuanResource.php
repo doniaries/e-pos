@@ -17,6 +17,7 @@ use App\Filament\Resources\Satuans\RelationManagers;
 class SatuanResource extends Resource
 {
     protected static ?string $model = Satuan::class;
+    protected static ?string $slug = 'satuans';
 
     protected static ?string $navigationIcon = 'heroicon-o-scale';
     protected static ?string $navigationGroup = 'Master Data';

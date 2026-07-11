@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class PenjualanDetailResource extends Resource
 {
     protected static ?string $model = PenjualanDetail::class;
+    protected static ?string $slug = 'penjualan-details';
 
     protected static ?string $navigationIcon = 'heroicon-o-arrows-right-left';
     protected static ?string $navigationGroup = 'Transaksi';

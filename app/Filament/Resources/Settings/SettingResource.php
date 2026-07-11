@@ -19,6 +19,7 @@ use Filament\Infolists\Components;
 class SettingResource extends Resource
 {
     protected static ?string $model = Setting::class;
+    protected static ?string $slug = 'settings';
 
     protected static ?string $navigationLabel = 'Pengaturan Toko';
     protected static ?string $navigationIcon = 'heroicon-o-adjustments-horizontal';
