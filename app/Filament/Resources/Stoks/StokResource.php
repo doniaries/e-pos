@@ -41,12 +41,12 @@ class StokResource extends Resource
         return false;
     }
 
-    public static function canEdit(Filament\Resources\Resource|\Illuminate\Database\Eloquent\Model $record): bool
+    public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
     {
         return false;
     }
 
-    public static function canDelete(Filament\Resources\Resource|\Illuminate\Database\Eloquent\Model $record): bool
+    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
     {
         return false;
     }

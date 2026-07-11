@@ -1,6 +1,6 @@
 # 🛒 Sistem Point of Sale (POS)
 
-Aplikasi Point of Sale berbasis web yang dibangun dengan **Laravel 11** dan **Filament 4**, dirancang untuk memudahkan pengelolaan transaksi penjualan, inventori, dan administrasi toko.
+Aplikasi Point of Sale berbasis web yang dibangun dengan **Laravel 12** dan **Filament 4**, dirancang untuk memudahkan pengelolaan transaksi penjualan, inventori, dan administrasi toko.
 
 developed by : Don Borland
 
@@ -18,106 +18,108 @@ developed by : Don Borland
 ## ✨ Fitur Utama
 
 ### 🏪 Master Data
+
 - **Manajemen Produk**
-  - Multi-satuan dengan konversi otomatis (contoh: 1 Dus = 12 Pcs)
-  - Support barcode scanning
-  - Harga khusus per satuan (eceran, grosir, dll)
-  - Tracking stok real-time
-  - Kategori produk
-  - Upload foto produk
+    - Multi-satuan dengan konversi otomatis (contoh: 1 Dus = 12 Pcs)
+    - Support barcode scanning
+    - Harga khusus per satuan (eceran, grosir, dll)
+    - Tracking stok real-time
+    - Kategori produk
+    - Upload foto produk
 
 - **Manajemen Member**
-  - Sistem kode member otomatis (format: MBR-YYYY-XXXX)
-  - Tracking hutang member
-  - Pembayaran cicilan hutang
-  - Riwayat pembayaran hutang lengkap
-  - Tanggal bergabung otomatis
+    - Sistem kode member otomatis (format: MBR-YYYY-XXXX)
+    - Tracking hutang member
+    - Pembayaran cicilan hutang
+    - Riwayat pembayaran hutang lengkap
+    - Tanggal bergabung otomatis
 
 - **Manajemen Supplier**
-  - Data supplier dengan informasi kontak lengkap
-  - Tracking pembelian per supplier
+    - Data supplier dengan informasi kontak lengkap
+    - Tracking pembelian per supplier
 
 ### 💰 Transaksi
 
 - **POS (Point of Sale)**
-  - Interface khusus kasir yang user-friendly
-  - Barcode scanning dengan sound effect
-  - Kalkulasi otomatis (subtotal, diskon, pajak, kembalian)
-  - Multiple metode pembayaran (Tunai, Transfer)
-  - Split payment (sebagian tunai + sebagian transfer)
-  - Diskon fleksibel (persen atau nominal)
-  - Cetak struk otomatis
+    - Interface khusus kasir yang user-friendly
+    - Barcode scanning dengan sound effect
+    - Kalkulasi otomatis (subtotal, diskon, pajak, kembalian)
+    - Multiple metode pembayaran (Tunai, Transfer)
+    - Split payment (sebagian tunai + sebagian transfer)
+    - Diskon fleksibel (persen atau nominal)
+    - Cetak struk otomatis
 
 - **Manajemen Penjualan**
-  - CRUD penjualan lengkap
-  - Filter berdasarkan tanggal, status pembayaran
-  - Export data penjualan
-  - Detail transaksi per item
+    - CRUD penjualan lengkap
+    - Filter berdasarkan tanggal, status pembayaran
+    - Export data penjualan
+    - Detail transaksi per item
 
 - **Manajemen Pembelian**
-  - CRUD pembelian dari supplier
-  - Tracking uang muka dan sisa pembayaran
-  - Diskon pembelian
-  - Auto-update stok setelah pembelian
+    - CRUD pembelian dari supplier
+    - Tracking uang muka dan sisa pembayaran
+    - Diskon pembelian
+    - Auto-update stok setelah pembelian
 
 ### 📊 Inventori & Stok
 
 - **Manajemen Stok**
-  - Tracking keluar-masuk stok
-  - Stok opname
-  - Riwayat perubahan stok
-  - Alert stok minimum
-  - Multiple jenis transaksi (masuk, keluar, retur, opname, penyesuaian)
+    - Tracking keluar-masuk stok
+    - Stok opname
+    - Riwayat perubahan stok
+    - Alert stok minimum
+    - Multiple jenis transaksi (masuk, keluar, retur, opname, penyesuaian)
 
 ### 📈 Laporan & Dashboard
 
 - **Dashboard Admin**
-  - Statistik penjualan hari ini
-  - Grafik trend penjualan
-  - Widget "Top 10 Produk Terlaris"
-    - Total unit terjual
-    - Sisa stok dengan indikator visual
-    - Harga jual
+    - Statistik penjualan hari ini
+    - Grafik trend penjualan
+    - Widget "Top 10 Produk Terlaris"
+        - Total unit terjual
+        - Sisa stok dengan indikator visual
+        - Harga jual
 
 - **Laporan Harian**
-  - Tutup kasir otomatis
-  - Laporan penjualan per periode
-  - Export ke PDF
-  - Tracking kas masuk/keluar
+    - Tutup kasir otomatis
+    - Laporan penjualan per periode
+    - Export ke PDF
+    - Tracking kas masuk/keluar
 
 ### 🖨️ Cetak Barcode Label 103
 
 - **Fitur Cetak Barcode**
-  - Format label 103 standar undangan (3.2 x 6.4 cm)
-  - Layout 3 kolom x 4 baris (12 label per halaman)
-  - Single print (1 produk diulang 12x)
-  - Bulk print (pilih multiple produk)
-  - Output PDF siap cetak
-  - Margin presisi sesuai standar label
+    - Format label 103 standar undangan (3.2 x 6.4 cm)
+    - Layout 3 kolom x 4 baris (12 label per halaman)
+    - Single print (1 produk diulang 12x)
+    - Bulk print (pilih multiple produk)
+    - Output PDF siap cetak
+    - Margin presisi sesuai standar label
 
 ### ⚙️ Pengaturan
 
 - **Setting Toko**
-  - Informasi toko (nama, alamat, telp
+    - Informasi toko (nama, alamat, telp
 
 on)
-  - Upload logo toko
-  - Pengaturan pajak default
-  - Konfigurasi receipt/struk
+
+- Upload logo toko
+- Pengaturan pajak default
+- Konfigurasi receipt/struk
 
 ## 🛠️ Teknologi yang Digunakan
 
 - **Backend**: Laravel 11
 - **Admin Panel**: Filament 4
 - **Database**: MySQL
-- **Frontend**: 
-  - Livewire (untuk POS interface)
-  - Alpine.js
-  - Tailwind CSS
+- **Frontend**:
+    - Livewire (untuk POS interface)
+    - Alpine.js
+    - Tailwind CSS
 - **Libraries**:
-  - `picqer/php-barcode-generator` - Generate barcode
-  - `barryvdh/laravel-dompdf` - Generate PDF
-  - Filament Plugins
+    - `picqer/php-barcode-generator` - Generate barcode
+    - `barryvdh/laravel-dompdf` - Generate PDF
+    - Filament Plugins
 
 ## 📥 Instalasi
 
@@ -171,6 +173,7 @@ php artisan db:seed
 ```
 
 Seeder akan mengisi:
+
 - User admin default (email: admin@example.com, password: password)
 - 6 data member dengan berbagai tingkat hutang
 - Kategori produk
@@ -216,8 +219,8 @@ php artisan vendor:publish --tag=filament-developer-logins-translations
 
 1. Akses `/admin`
 2. Login dengan kredensial default:
-   - Email: `admin@example.com`
-   - Password: `password`
+    - Email: `admin@example.com`
+    - Password: `password`
 
 ### Menggunakan POS
 
@@ -235,8 +238,8 @@ php artisan vendor:publish --tag=filament-developer-logins-translations
 1. Buka menu **Produk**
 2. Pilih produk yang ingin dicetak barcode
 3. Opsi:
-   - **Single**: Klik tombol printer di baris produk
-   - **Bulk**: Centang beberapa produk → Bulk Action → "Cetak Barcode Label 103"
+    - **Single**: Klik tombol printer di baris produk
+    - **Bulk**: Centang beberapa produk → Bulk Action → "Cetak Barcode Label 103"
 4. PDF akan terbuka di tab baru
 5. Cetak ke printer dengan kertas label 103
 
@@ -246,10 +249,10 @@ php artisan vendor:publish --tag=filament-developer-logins-translations
 2. Klik pada member yang memiliki hutang
 3. Klik tombol **"Bayar Hutang"** di tabel
 4. Input:
-   - Jumlah bayar
-   - Tanggal pembayaran
-   - Metode pembayaran
-   - Catatan (opsional)
+    - Jumlah bayar
+    - Tanggal pembayaran
+    - Metode pembayaran
+    - Catatan (opsional)
 5. Simpan - hutang akan otomatis berkurang
 
 ### Sistem Hutang Member di POS
@@ -259,6 +262,7 @@ php artisan vendor:publish --tag=filament-developer-logins-translations
 Member/pelanggan tetap memiliki **privilege khusus** untuk melakukan transaksi dengan sistem hutang:
 
 **Tipe Konsumen:**
+
 - **👤 Umum**: Pelanggan biasa - WAJIB bayar lunas
 - **⭐ Member**: Pelanggan tetap - BOLEH hutang (full atau sebagian)
 
@@ -272,6 +276,7 @@ Member/pelanggan tetap memiliki **privilege khusus** untuk melakukan transaksi d
 #### 💡 Contoh Skenario
 
 **Skenario 1: Member Bayar Sebagian**
+
 ```
 Total Belanja: Rp 100.000
 Bayar: Rp 50.000
@@ -280,6 +285,7 @@ Status: Bayar Sebagian
 ```
 
 **Skenario 2: Member Full Hutang**
+
 ```
 Total Belanja: Rp 150.000
 Bayar: Rp 0
@@ -288,6 +294,7 @@ Status: Hutang
 ```
 
 **Skenario 3: Member Bayar Lunas**
+
 ```
 Total Belanja: Rp 200.000
 Bayar: Rp 200.000
@@ -305,17 +312,19 @@ Status: Lunas
 #### 📊 Melihat Hutang Member
 
 **Di Admin Panel:**
+
 1. Buka menu **Pelanggan**
 2. Lihat kolom **Hutang**
 3. Filter member dengan hutang > 0
 4. Klik member untuk detail transaksi
 
 **Di Database:**
+
 ```sql
 -- Lihat semua member yang punya hutang
-SELECT kode_member, nama, hutang 
-FROM pelanggans 
-WHERE hutang > 0 
+SELECT kode_member, nama, hutang
+FROM pelanggans
+WHERE hutang > 0
 ORDER BY hutang DESC;
 ```
 
@@ -332,11 +341,13 @@ Aplikasi mendukung **barcode scanner fisik** (USB/Bluetooth) yang bekerja sepert
 #### 📱 Setup Scanner
 
 **USB Scanner:**
+
 1. Colokkan scanner ke port USB
 2. Tunggu Windows mendeteksi (otomatis)
 3. Scanner siap digunakan
 
 **Bluetooth Scanner:**
+
 1. Nyalakan scanner
 2. Tekan tombol pairing
 3. Di Windows: Settings → Bluetooth & devices → Add device
@@ -354,29 +365,33 @@ Aplikasi mendukung **barcode scanner fisik** (USB/Bluetooth) yang bekerja sepert
 #### ⚙️ Konfigurasi Scanner (Opsional)
 
 **Enter Key Suffix:**
+
 - Scan barcode "Add Enter Suffix" di manual scanner
 - Scanner akan auto-tekan Enter setelah scan
 
 **Tab Key Suffix:**
+
 - Scan barcode "Add Tab Suffix" di manual scanner
 - Scanner akan auto-pindah ke field berikutnya
 
 #### 💰 Rekomendasi Scanner
 
-| Budget | Model | Harga | Fitur |
-|--------|-------|-------|-------|
-| **Budget** | Yongli XYL-901 | Rp 150k-300k | USB, 1D barcode |
+| Budget        | Model                   | Harga        | Fitur             |
+| ------------- | ----------------------- | ------------ | ----------------- |
+| **Budget**    | Yongli XYL-901          | Rp 150k-300k | USB, 1D barcode   |
 | **Mid-Range** | Honeywell Voyager 1200g | Rp 300k-500k | USB, 1D, reliable |
-| **Premium** | Zebra DS2208 | Rp 800k+ | USB, 2D, QR code |
+| **Premium**   | Zebra DS2208            | Rp 800k+     | USB, 2D, QR code  |
 
 ## 📸 Screenshot
 
 ### 🖥️ Interface POS (Kasir)
+
 Interface POS yang modern dan user-friendly dengan fitur barcode scanning, multiple metode pembayaran, dan kalkulasi otomatis.
 
 ![POS Interface](public/screenshots/pos-interface.png)
 
 **Fitur yang terlihat:**
+
 - Search barcode/produk
 - Kategori produk (Draft, Produk, Riwayat, Tutup Hari)
 - Multiple metode pembayaran (Tunai, Transfer)
@@ -385,17 +400,18 @@ Interface POS yang modern dan user-friendly dengan fitur barcode scanning, multi
 - Total belanja real-time
 
 ### 📊 Admin Panel - Manajemen Produk
+
 Panel admin dengan Filament 4 untuk manajemen data produk lengkap dengan multi-satuan dan harga fleksibel.
 
 ![Admin Produk](public/screenshots/admin-produk.png)
 
 **Fitur yang terlihat:**
+
 - Daftar produk dengan kategori dan satuan
 - Harga Beli, Harga Jual, Harga Grosir
 - Stok real-time dengan indikator warna
 - Tombol aksi: Ubah dan Cetak Barcode
 - Navigasi menu terorganisir (Master Data, Transaksi, Pelindung, dll)
-
 
 ## Panduan Penggunaan Aplikasi POS (e-POS)
 
@@ -410,11 +426,11 @@ Sebelum melakukan transaksi, Anda perlu melengkapi data dasar di menu **Master D
 #### A. Produk & Inventori
 
 - **Kelola Produk**: Digunakan untuk mendaftarkan barang yang dijual.
-  - **Barcode**: Setiap produk wajib memiliki kode barcode unik. Sistem mendukung input manual atau scanner.
-  - **Kategori & Satuan**: Mengelompokkan produk (contoh: Makanan, Minuman) dan menentukan satuan dasar (contoh: PCS, BOX).
-  - **Satuan Lanjutan (Konversi)**: Fitur khusus untuk produk yang memiliki lebih dari satu satuan. Contoh: 1 Dus berisi 12 Pcs. Anda bisa mengatur harga jual khusus untuk satuan besar.
-  - **Harga Beli vs Harga Jual**: Masukkan harga modal (beli) dan harga jual. Sistem akan memvalidasi agar harga jual tidak lebih rendah dari harga beli.
-  - **Stok Awal**: Saat membuat produk baru, Anda bisa memasukkan jumlah stok awal.
+    - **Barcode**: Setiap produk wajib memiliki kode barcode unik. Sistem mendukung input manual atau scanner.
+    - **Kategori & Satuan**: Mengelompokkan produk (contoh: Makanan, Minuman) dan menentukan satuan dasar (contoh: PCS, BOX).
+    - **Satuan Lanjutan (Konversi)**: Fitur khusus untuk produk yang memiliki lebih dari satu satuan. Contoh: 1 Dus berisi 12 Pcs. Anda bisa mengatur harga jual khusus untuk satuan besar.
+    - **Harga Beli vs Harga Jual**: Masukkan harga modal (beli) dan harga jual. Sistem akan memvalidasi agar harga jual tidak lebih rendah dari harga beli.
+    - **Stok Awal**: Saat membuat produk baru, Anda bisa memasukkan jumlah stok awal.
 
 #### B. Pelanggan & Distributor
 
@@ -431,11 +447,11 @@ Menu ini digunakan oleh Kasir untuk melayani pembeli.
 2. **Validasi Stok**: Sistem akan menolak jika jumlah barang yang dimasukkan melebihi stok yang tersedia.
 3. **Diskon & Pajak**: Anda dapat memberikan diskon dalam bentuk **Persentase (%)** atau **Nilai Rupiah (Rp)**. Sistem juga mendukung perhitungan PPN secara otomatis.
 4. **Metode Pembayaran**:
-   - **Tunai**: Untuk pembayaran uang tunai. Masukkan jumlah uang bayar untuk menghitung kembalian.
-   - **Non-Tunai**: Mendukung Transfer Bank, QRIS, dan Kartu Debit. Anda bisa menginput Nama Bank dan Nomor Ref/Kartu untuk keperluan pelacakan.
+    - **Tunai**: Untuk pembayaran uang tunai. Masukkan jumlah uang bayar untuk menghitung kembalian.
+    - **Non-Tunai**: Mendukung Transfer Bank, QRIS, dan Kartu Debit. Anda bisa menginput Nama Bank dan Nomor Ref/Kartu untuk keperluan pelacakan.
 5. **Status Transaksi**:
-   - **Selesai**: Jika pembayaran lunas.
-   - **Pending**: Jika pembayaran belum lunas atau barang dipesan terlebih dahulu.
+    - **Selesai**: Jika pembayaran lunas.
+    - **Pending**: Jika pembayaran belum lunas atau barang dipesan terlebih dahulu.
 6. **Cetak Struk**: Setelah transaksi berhasil, Anda dapat mencetak struk belanja untuk pelanggan.
 
 ---
@@ -512,30 +528,30 @@ Kontribusi selalu diterima! Silakan:
 ### Version 1.1.0 (Latest)
 
 - ✅ **Sistem Hutang Member Lengkap**
-  - Member bisa hutang (full atau sebagian)
-  - Tracking hutang otomatis dan kumulatif
-  - Status pembayaran: Lunas, Bayar Sebagian, Hutang
-  - Pembayaran hutang dengan riwayat lengkap
-  - Validasi: Pelanggan Umum wajib bayar lunas
+    - Member bisa hutang (full atau sebagian)
+    - Tracking hutang otomatis dan kumulatif
+    - Status pembayaran: Lunas, Bayar Sebagian, Hutang
+    - Pembayaran hutang dengan riwayat lengkap
+    - Validasi: Pelanggan Umum wajib bayar lunas
 
 - ✅ **Barcode Scanner Fisik**
-  - Support USB, Bluetooth, dan Wireless 2.4GHz scanner
-  - Plug and play - bekerja seperti keyboard
-  - Tidak perlu kamera atau HTTPS
-  - Instant scanning (<0.5 detik)
-  - Dokumentasi setup lengkap
+    - Support USB, Bluetooth, dan Wireless 2.4GHz scanner
+    - Plug and play - bekerja seperti keyboard
+    - Tidak perlu kamera atau HTTPS
+    - Instant scanning (<0.5 detik)
+    - Dokumentasi setup lengkap
 
 - ✅ **Perbaikan Tutup Hari**
-  - Fix error "Tidak ada transaksi penjualan untuk ditutup"
-  - Perhitungan tunai vs non-tunai dari tabel pembayarans
-  - Laporan PDF otomatis terdownload
+    - Fix error "Tidak ada transaksi penjualan untuk ditutup"
+    - Perhitungan tunai vs non-tunai dari tabel pembayarans
+    - Laporan PDF otomatis terdownload
 
 - ✅ **Fitur Tutup Hari Transaksi Otomatis**
-  - Otomatis membuat Laporan Harian pada pukul 23:59 WIB.
-  - Merekap semua transaksi penjualan hari ini yang belum dilaporkan.
-  - **Cara Setup:**
-    - **Development:** Jalankan `php artisan schedule:work`.
-    - **Production:** Tambahkan cron job `* * * * * php /path-to-project/artisan schedule:run >> /dev/null 2>&1`.
+    - Otomatis membuat Laporan Harian pada pukul 23:59 WIB.
+    - Merekap semua transaksi penjualan hari ini yang belum dilaporkan.
+    - **Cara Setup:**
+        - **Development:** Jalankan `php artisan schedule:work`.
+        - **Production:** Tambahkan cron job `* * * * * php /path-to-project/artisan schedule:run >> /dev/null 2>&1`.
 
 ### Version 1.0.0
 
