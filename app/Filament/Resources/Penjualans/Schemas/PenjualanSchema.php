@@ -147,6 +147,14 @@ class PenjualanSchema
                         Forms\Components\Group::make([
                             Forms\Components\Section::make('Pembayaran')
                                 ->schema([
+                                    Forms\Components\Placeholder::make('grand_total_display')
+                                        ->label('TOTAL BELANJA')
+                                        ->content(function (Forms\Get $get) {
+                                            $total = $get('total') ?? 0;
+                                            return new \Illuminate\Support\HtmlString('<div style="font-size: 2rem; font-weight: bold; color: #16a34a; text-align: right; padding: 10px; background-color: #f0fdf4; border-radius: 8px;">Rp ' . number_format($total, 0, ',', '.') . '</div>');
+                                        })
+                                        ->columnSpanFull(),
+
                                     Forms\Components\Select::make('tipe_pelanggan')
                                         ->label('Tipe Pelanggan')
                                         ->options([
