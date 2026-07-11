@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Produks\Tables;
 use Illuminate\Database\Eloquent\Builder;
 
 use Filament\Tables;
+use App\Models\Produk;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Tables\Table;
 use Filament\Tables\Columns;
