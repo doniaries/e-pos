@@ -184,34 +184,6 @@ class PenjualanResource extends Resource
         ];
     }
 
-    protected static function recalculateTotal(Forms\Set $set, Forms\Get $get): void
-    {
-        $details = collect($get('details') ?? [])->toArray();
-        $subtotal = collect($details)->sum('subtotal');
-
-        $set('subtotal', $subtotal);
-
-        $diskon_persen = $get('diskon_persen') ?? 0;
-        $diskon_nilai = $get('diskon_nilai') ?? 0;
-
-        if ($diskon_persen > 0) {
-            $diskon_nilai = round($subtotal * ($diskon_persen / 100));
-            $set('diskon_nilai', $diskon_nilai);
-        }
-
-        $total_setelah_diskon = $subtotal - $diskon_nilai;
-
-        $pajak_persen = $get('pajak_persen') ?? 0;
-        $pajak_nilai = round($total_setelah_diskon * ($pajak_persen / 100));
-        $set('pajak_nilai', $pajak_nilai);
-
-        $total = $total_setelah_diskon + $pajak_nilai;
-        $set('total', $total);
-
-        $bayar = $get('bayar') ?? 0;
-        $set('kembali', $bayar - $total);
-    }
-
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()

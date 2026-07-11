@@ -130,7 +130,7 @@
 
     <!-- App Info -->
     <div class="flex items-center gap-3 text-[9px] md:text-[10px] font-bold text-slate-500">
-        @php $app = \App\Models\Aplikasi::first(); @endphp
+        @php $app = \App\Models\Setting::first(); @endphp
         <span class="bg-slate-800/50 px-2 py-0.5 rounded border border-slate-700/50">
             {{ $app->nama_aplikasi ?? 'POS App' }} v{{ $app->version ?? '1.2' }}
         </span>

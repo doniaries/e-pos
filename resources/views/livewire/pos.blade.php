@@ -473,6 +473,22 @@
                 </div>
                 @endif
             </div>
+            
+            <!-- SUMMARY BAR -->
+            @if(count($cart) > 0)
+            <div class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 p-4 md:p-6 flex flex-col md:flex-row justify-between items-center shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-20 shrink-0">
+                <div class="mb-4 md:mb-0">
+                    <p class="text-gray-500 dark:text-gray-400 text-sm font-bold uppercase tracking-wider mb-1">Total Belanja</p>
+                    <p class="text-3xl md:text-5xl font-black text-emerald-600 dark:text-emerald-400 leading-none tracking-tight">Rp {{ number_format($grandTotal) }}</p>
+                </div>
+                <button wire:click="openPaymentModal()" class="w-full md:w-auto px-8 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 active:translate-y-0 active:scale-95 font-black text-xl flex items-center justify-center gap-3 group">
+                    <svg class="w-6 h-6 md:w-8 md:h-8 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    BAYAR (ENTER)
+                </button>
+            </div>
+            @endif
         </div>
     </div>
 
