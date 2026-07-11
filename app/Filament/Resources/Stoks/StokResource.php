@@ -36,6 +36,21 @@ class StokResource extends Resource
         return !(\App\Models\Setting::first()?->is_toko_tutup ?? false);
     }
 
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
+    public static function canEdit(Filament\Resources\Resource|\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return false;
+    }
+
+    public static function canDelete(Filament\Resources\Resource|\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return false;
+    }
+
     public static function form(Schema $schema): Schema
     {
         return \App\Filament\Resources\Stoks\Schemas\StokSchema::form($schema);

@@ -10,6 +10,10 @@ class Setting extends Model
     protected $table = 'settings';
 
     protected $fillable = [
+        'nama_aplikasi',
+        'version',
+        'pembuat',
+        'tahun',
         'nama_perusahaan',
         'alamat',
         'kontak',
