@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Pelanggans\RelationManagers;
 
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Forms\Form as Schema;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
