@@ -197,7 +197,8 @@ class Pos extends Component
                 'price' => $product->harga_jual,
                 'quantity' => 1,
                 'subtotal' => $product->harga_jual,
-                'satuan_id' => $product->satuan_id
+                'satuan_id' => $product->satuan_id,
+                'catatan' => null
             ];
         }
 
@@ -243,6 +244,14 @@ class Pos extends Component
                 unset($this->cart[$productId]);
             }
             $this->calculateTotal();
+            $this->dispatch('cart-updated');
+        }
+    }
+
+    public function updateItemNote($productId, $note)
+    {
+        if (isset($this->cart[$productId])) {
+            $this->cart[$productId]['catatan'] = $note;
             $this->dispatch('cart-updated');
         }
     }
@@ -410,7 +419,8 @@ class Pos extends Component
                             'harga' => $item['price'],
                             'diskon_persen' => 0,
                             'diskon_nilai' => 0,
-                            'subtotal' => $item['subtotal']
+                            'subtotal' => $item['subtotal'],
+                            'catatan' => $item['catatan'] ?? null
                         ]);
 
                         $produk->decrement('stok', $item['quantity']);

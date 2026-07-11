@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Produks\Schemas;
 
 use Filament\Forms;
 use Filament\Forms\Form as Schema;
+use Illuminate\Support\Str;
 
 class ProdukSchema
 {
@@ -179,6 +180,17 @@ class ProdukSchema
                                     ->imageResizeTargetWidth('800')
                                     ->imageResizeTargetHeight('800')
                                     ->helperText('Format: JPG, PNG, WebP. Maksimal 5MB. Disarankan 800x800px.'),
+                            ]),
+
+                        Forms\Components\Tabs\Tab::make('Spesifikasi Tambahan')
+                            ->icon('heroicon-m-clipboard-document-list')
+                            ->schema([
+                                Forms\Components\KeyValue::make('spesifikasi')
+                                    ->label('Keterangan Atribut Produk')
+                                    ->keyLabel('Nama (Misal: Garansi, ISBN, Bahan)')
+                                    ->valueLabel('Nilai (Misal: 1 Tahun, 978-602, Katun)')
+                                    ->addActionLabel('Tambah Atribut')
+                                    ->reorderable()
                             ]),
 
                         Forms\Components\Tabs\Tab::make('Satuan Lanjutan')

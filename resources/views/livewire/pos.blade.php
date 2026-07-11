@@ -425,8 +425,11 @@
                             <td class="px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-200">
                                 {{ $item['kode_produk'] ?? '-' }}
                             </td>
-                            <td class="px-6 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-gray-300 font-bold">
+                            <td class="px-6 py-3 text-sm text-gray-800 dark:text-gray-300 font-bold">
                                 {{ $item['name'] }}
+                                <div class="mt-1">
+                                    <input type="text" wire:change="updateItemNote('{{ $id }}', $event.target.value)" value="{{ $item['catatan'] ?? '' }}" placeholder="Catatan/IMEI/SN (Opsional)" class="text-xs border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 rounded px-2 py-1 w-full focus:ring-blue-500 focus:border-blue-500 font-normal transition-colors">
+                                </div>
                             </td>
                             <td class="px-6 py-3 whitespace-nowrap">
                                 <div class="flex justify-center items-center">

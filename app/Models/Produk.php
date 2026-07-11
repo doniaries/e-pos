@@ -38,6 +38,7 @@ class Produk extends Model
         'stok_minimum',
         'stok_maksimum',
         'gambar_produk',
+        'spesifikasi',
     ];
 
     protected $casts = [
@@ -47,6 +48,7 @@ class Produk extends Model
         'stok' => 'integer',
         'stok_minimum' => 'integer',
         'stok_maksimum' => 'integer',
+        'spesifikasi' => 'array',
     ];
 
     // Cache query yang sering digunakan
