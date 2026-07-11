@@ -5,7 +5,7 @@ namespace App\Filament\Resources;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Satuan;
-use Filament\Forms\Schema;
+use Filament\Forms\Form as Schema;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Illuminate\Support\Facades\Cache;
@@ -24,15 +24,7 @@ class SatuanResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema->schema([
-                Forms\Components\TextInput::make('nama')
-                    ->unique(ignoreRecord: true)
-                    ->autofocus()
-                    ->extraInputAttributes(['style' => 'text-transform: uppercase'])
-                    ->dehydrateStateUsing(fn($state) => strtoupper($state))
-                    ->required()
-                    ->maxLength(255),
-            ]);
+        return \App\Filament\Resources\SatuanResource\Schemas\SatuanSchema::form($schema);
     }
 
     public static function table(Table $table): Table

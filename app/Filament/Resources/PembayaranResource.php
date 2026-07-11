@@ -6,7 +6,7 @@ use App\Filament\Resources\PembayaranResource\Pages;
 use App\Filament\Resources\PembayaranResource\RelationManagers;
 use App\Models\Pembayaran;
 use Filament\Forms;
-use Filament\Forms\Schema;
+use Filament\Forms\Form as Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -28,24 +28,7 @@ class PembayaranResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema->schema([
-                Forms\Components\TextInput::make('penjualan_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('metode')
-                    ->required(),
-                Forms\Components\TextInput::make('jumlah')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('nomor_kartu')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('bank')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('bukti_pembayaran')
-                    ->maxLength(255),
-                Forms\Components\Textarea::make('catatan')
-                    ->columnSpanFull(),
-            ]);
+        return \App\Filament\Resources\PembayaranResource\Schemas\PembayaranSchema::form($schema);
     }
 
     public static function table(Table $table): Table

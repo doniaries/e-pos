@@ -6,7 +6,7 @@ use App\Filament\Resources\PenjualanDetailResource\Pages;
 use App\Filament\Resources\PenjualanDetailResource\RelationManagers;
 use App\Models\PenjualanDetail;
 use Filament\Forms;
-use Filament\Forms\Schema;
+use Filament\Forms\Form as Schema;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -27,26 +27,7 @@ class PenjualanDetailResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema->schema([
-                Forms\Components\TextInput::make('penjualan_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('produk_id')
-                    ->required(),
-                Forms\Components\TextInput::make('jumlah')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('satuan_id')
-                    ->required(),
-                Forms\Components\TextInput::make('harga')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('subtotal')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\Textarea::make('catatan')
-                    ->columnSpanFull(),
-            ]);
+        return \App\Filament\Resources\PenjualanDetailResource\Schemas\PenjualanDetailSchema::form($schema);
     }
 
     public static function table(Table $table): Table

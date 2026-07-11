@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use Filament\Forms;
 use Filament\Tables;
-use Filament\Forms\Schema;
+use Filament\Forms\Form as Schema;
 use Filament\Tables\Table;
 use App\Models\KategoriProduk;
 use Filament\Resources\Resource;
@@ -24,14 +24,7 @@ class KategoriProdukResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema->schema([
-                Forms\Components\TextInput::make('nama')
-                    ->unique(ignoreRecord: true)
-                    ->autofocus()
-                    ->dehydrateStateUsing(fn($state) => strtoupper($state))
-                    ->required()
-                    ->maxLength(255),
-            ]);
+        return \App\Filament\Resources\KategoriProdukResource\Schemas\KategoriProdukSchema::form($schema);
     }
 
     public static function table(Table $table): Table
