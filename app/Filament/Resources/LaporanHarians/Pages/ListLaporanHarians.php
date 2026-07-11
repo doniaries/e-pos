@@ -52,21 +52,21 @@ class ListLaporanHarians extends ListRecords
                             ->latest()
                             ->get();
                         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.laporan-penjualan', compact('records', 'start', 'end'));
-                        return response()->streamDownload(fn() => print($pdf->output()), 'laporan-penjualan.pdf');
+                        return $pdf->download('laporan-penjualan.pdf');
                     } elseif ($jenis == 'pembelian') {
                         $records = \App\Models\Pembelian::with('distributor')
                             ->whereBetween('tanggal_pembelian', [$start, $end])
                             ->latest()
                             ->get();
                         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.laporan-pembelian', compact('records', 'start', 'end'));
-                        return response()->streamDownload(fn() => print($pdf->output()), 'laporan-pembelian.pdf');
+                        return $pdf->download('laporan-pembelian.pdf');
                     } elseif ($jenis == 'stok') {
                         $records = \App\Models\Stok::with(['produk', 'user'])
                             ->whereBetween('created_at', [$start . ' 00:00:00', $end . ' 23:59:59'])
                             ->latest()
                             ->get();
                         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.laporan-stok', compact('records', 'start', 'end'));
-                        return response()->streamDownload(fn() => print($pdf->output()), 'laporan-riwayat-stok.pdf');
+                        return $pdf->download('laporan-riwayat-stok.pdf');
                     }
                 }),
             // Actions\CreateAction::make(),

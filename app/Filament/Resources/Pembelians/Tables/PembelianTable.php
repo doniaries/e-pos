@@ -151,7 +151,7 @@ class PembelianTable
 
                             $pdf = Pdf::loadView('pdf.laporan-pembelian', compact('records', 'start', 'end', 'storeName', 'storeAddress', 'userName', 'logoPath', 'storeStatuses'))
                                 ->setPaper('a4', 'landscape');
-                            return response()->streamDownload(fn() => print($pdf->output()), 'laporan-pembelian.pdf');
+                            return $pdf->download('laporan-pembelian.pdf');
                         } catch (\Exception $e) {
                             \Filament\Notifications\Notification::make()
                                 ->title('Gagal Cetak PDF')

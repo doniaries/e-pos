@@ -53,17 +53,17 @@ class PenjualanTable
                     ->badge()
                     ->color('success')
                     ->sortable()
-                    ->summarize(Tables\Columns\Summarizers\Sum::make()->money('IDR')),
+                    ->summarize(Tables\Columns\Summarizers\Sum::make()->label('Total')->money('IDR')),
                 Tables\Columns\TextColumn::make('bayar')
                     ->label('Bayar')
                     ->money('IDR')
                     ->sortable()
-                    ->summarize(Tables\Columns\Summarizers\Sum::make()->money('IDR')),
+                    ->summarize(Tables\Columns\Summarizers\Sum::make()->label('Total')->money('IDR')),
                 Tables\Columns\TextColumn::make('kembali')
                     ->label('Kembali')
                     ->money('IDR')
                     ->sortable()
-                    ->summarize(Tables\Columns\Summarizers\Sum::make()->money('IDR')),
+                    ->summarize(Tables\Columns\Summarizers\Sum::make()->label('Total')->money('IDR')),
                 Tables\Columns\TextColumn::make('status_pembayaran')
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
@@ -194,7 +194,7 @@ class PenjualanTable
                             }
                             $filename .= '-' . $shiftName . '.pdf';
 
-                            return response()->streamDownload(fn() => print($pdf->output()), $filename);
+                            return $pdf->download($filename);
                         } catch (\Exception $e) {
                             \Filament\Notifications\Notification::make()
                                 ->title('Gagal Cetak PDF')

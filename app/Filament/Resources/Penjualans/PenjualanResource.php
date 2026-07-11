@@ -180,7 +180,7 @@ class PenjualanResource extends Resource
         return [
             'index' => Pages\ListPenjualans::route('/'),
             'create' => Pages\CreatePenjualan::route('/create'),
-            // 'view' => Pages\ViewPenjualan::route('/{record}'),
+            'view' => Pages\ViewPenjualan::route('/{record}'),
         ];
     }
 

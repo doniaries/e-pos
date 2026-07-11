@@ -7,6 +7,8 @@ use Filament\Tables\Table;
 use Filament\Tables\Columns;
 use Filament\Tables\Actions;
 use Filament\Tables\Filters;
+use App\Models\LaporanHarian;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class LaporanHarianTable
 {
@@ -50,9 +52,7 @@ class LaporanHarianTable
                     ->action(function (LaporanHarian $record) {
                         $storeStatus = \App\Models\StoreStatus::where('tanggal', $record->tanggal->toDateString())->first();
                         $pdf = Pdf::loadView('pdf.laporan-harian-detail', compact('record', 'storeStatus'));
-                        return response()->streamDownload(function () use ($pdf) {
-                            echo $pdf->output();
-                        }, "laporan-harian-" . \Illuminate\Support\Carbon::parse($record->tanggal)->format('Y-m-d') . ".pdf");
+                        return $pdf->download("laporan-harian-" . \Illuminate\Support\Carbon::parse($record->tanggal)->format('Y-m-d') . ".pdf");
                     }),
             ])
             ->bulkActions([
