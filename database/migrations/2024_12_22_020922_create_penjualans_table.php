@@ -36,15 +36,15 @@ class CreatePenjualansTable extends Migration
             $table->decimal('bayar', 10, 0)->default(0); // Uang yang diterima
             $table->decimal('kembali', 10, 0)->default(0); // Uang kembalian, jika bayar > total
 
-            // Status pembayaran: 'belum_lunas' (jika pending/utang), 'lunas' (jika selesai)
-            $table->enum('status_pembayaran', ['belum_lunas', 'lunas'])->default('lunas');
+            // Status pembayaran
+            $table->enum('status_pembayaran', ['bayar_sebagian', 'hutang', 'lunas'])->default('lunas');
 
             // Info Bank / No Rek jika non-tunai
             $table->string('nama_bank')->nullable();
             $table->string('nomor_rekening')->nullable();
 
-            // Status Transaksi: 'pending' (Hold/Lupa Bawa Uang), 'selesai' (Final), 'batal'
-            $table->enum('status', ['pending', 'selesai', 'batal'])->default('selesai');
+            // Status Transaksi
+            $table->enum('status', ['draft', 'pending', 'selesai', 'batal'])->default('selesai');
 
             $table->text('catatan')->nullable();
             $table->timestamps();
