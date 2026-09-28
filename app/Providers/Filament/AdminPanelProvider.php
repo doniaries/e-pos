@@ -7,6 +7,7 @@ use Filament\Panel;
 use App\Models\User;
 use Filament\Widgets;
 use Filament\PanelProvider;
+use Gsferro\FilamentOdometerEasy\FilamentOdometerEasyPlugin;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Navigation\NavigationItem;
@@ -83,7 +84,8 @@ class AdminPanelProvider extends PanelProvider
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
                 FilamentDeveloperLoginsPlugin::make()
                     ->enabled(app()->environment('local'))
-                    ->users(fn() => User::pluck('email', 'name')->toArray())
+                    ->users(fn() => User::pluck('email', 'name')->toArray()),
+                FilamentOdometerEasyPlugin::make(),
             ])
             ->navigationGroups([
                 NavigationGroup::make()

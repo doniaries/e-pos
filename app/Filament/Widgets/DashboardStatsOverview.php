@@ -7,6 +7,7 @@ use App\Models\Penjualan;
 use App\Models\Produk;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Gsferro\FilamentOdometerEasy\Widgets\OdometerStat;
 
 class DashboardStatsOverview extends BaseWidget
 {
@@ -18,19 +19,19 @@ class DashboardStatsOverview extends BaseWidget
     protected function getStats(): array
     {
         return [
-            Stat::make('Jumlah Barang', Produk::count())
+            OdometerStat::make('Jumlah Barang', Produk::count())
                 ->description('Total item produk terdaftar')
                 ->descriptionIcon('heroicon-m-cube')
                 ->color('primary')
                 ->url(route('filament.admin.resources.produks.index')),
 
-            Stat::make('Jumlah Distributor', Distributor::count())
+            OdometerStat::make('Jumlah Distributor', Distributor::count())
                 ->description('Total mitra distributor')
                 ->descriptionIcon('heroicon-m-truck')
                 ->color('info')
                 ->url(route('filament.admin.resources.distributors.index')),
 
-            Stat::make('Transaksi Hari Ini', Penjualan::whereDate('created_at', today())->count())
+            OdometerStat::make('Transaksi Hari Ini', Penjualan::whereDate('created_at', today())->count())
                 ->description('Total transaksi hari ini')
                 ->descriptionIcon('heroicon-m-shopping-bag')
                 ->color('success')
@@ -42,13 +43,13 @@ class DashboardStatsOverview extends BaseWidget
                 ->color('success')
                 ->url(route('pos')),
 
-            Stat::make('Stok Habis', Produk::where('stok', '<=', 0)->count())
+            OdometerStat::make('Stok Habis', Produk::where('stok', '<=', 0)->count())
                 ->description('Produk dengan stok 0')
                 ->descriptionIcon('heroicon-m-x-circle')
                 ->color('danger')
                 ->url(route('filament.admin.resources.produks.index')),
 
-            Stat::make('Stok Akan Habis', Produk::where('stok', '>', 0)->where('stok', '<', 5)->count())
+            OdometerStat::make('Stok Akan Habis', Produk::where('stok', '>', 0)->where('stok', '<', 5)->count())
                 ->description('Produk dengan stok kurang dari 5')
                 ->descriptionIcon('heroicon-m-exclamation-triangle')
                 ->color('warning')
