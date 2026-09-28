@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cetak Struk #{{ $penjualan->nomor ?? '' }}</title>
+    <title>{{ $penjualan->no_transaksi ?? 'Struk' }}</title>
     <style>
         /* Reset total */
         html,
@@ -30,13 +30,7 @@
             font-size: 11px;
             line-height: 1.1;
 
-            width: {
-                    {
-                    $setting->printer_lebar_kertas ?? '58mm'
-                }
-            }
-
-            ;
+            width: {{ $setting->printer_lebar_kertas ?? '58mm' }};
             background: white;
             color: black;
             overflow-wrap: break-word;
@@ -150,13 +144,7 @@
             }
 
             body {
-                width: {
-                        {
-                        ($setting->printer_lebar_kertas ?? '58mm')==='80mm' ? '72mm': '52mm'
-                    }
-                }
-
-                ;
+                width: {{ ($setting->printer_lebar_kertas ?? '58mm') === '80mm' ? '72mm' : '52mm' }};
                 margin: 0 !important;
                 padding: 0 !important;
                 padding-left: 2mm !important;
