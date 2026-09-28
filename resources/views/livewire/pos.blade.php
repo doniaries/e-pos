@@ -659,7 +659,7 @@
                             </thead>
                             <tbody class="bg-white dark:bg-gray-800 divide-y dark:divide-gray-700">
                                 @forelse ($this->recentTransactions as $trx)
-                                <tr wire:key="history-row-{{ $trx->id }}" class="hover:bg-blue-50/10 transition-colors">
+                                <tr wire:click="showTransactionDetails({{ $trx->id }})" wire:key="history-row-{{ $trx->id }}" class="hover:bg-blue-50/10 transition-colors cursor-pointer">
                                     <td class="px-6 py-4 font-bold text-blue-500 dark:text-blue-400">{{ $trx->nomor }}</td>
                                     <td class="px-6 py-4 text-gray-700 dark:text-gray-200 font-medium">{{ $trx->pelanggan->nama ?? 'Umum' }}</td>
                                     <td class="px-6 py-4 text-center">
@@ -693,6 +693,67 @@
                 </div>
                 <div class="bg-gray-50 dark:bg-gray-900 px-6 py-4 border-t dark:border-gray-700 sticky bottom-0 z-20">
                     {{ $this->recentTransactions->links() }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transaction Detail Modal -->
+    <div x-cloak x-show="$wire.showTransactionDetailModal" class="fixed inset-0 z-[70] overflow-y-auto" role="dialog" aria-modal="true"
+        x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+        x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+            <div class="fixed inset-0 bg-gray-900/80 transition-opacity" @click="$wire.set('showTransactionDetailModal', false)"></div>
+            <div class="relative inline-block align-bottom bg-white dark:bg-gray-800 rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full border dark:border-gray-700">
+                <div class="bg-white dark:bg-gray-800 px-6 py-6">
+                    <div class="flex justify-between items-center mb-4 border-b dark:border-gray-700 pb-4">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Rincian Belanja</h3>
+                        <button @click="$wire.set('showTransactionDetailModal', false)" class="text-gray-400 hover:text-gray-500 bg-gray-100 dark:bg-gray-700 p-2 rounded-full"><svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg></button>
+                    </div>
+                    @if($detailTransaction)
+                    <div class="mb-4 text-sm text-gray-700 dark:text-gray-300 flex justify-between">
+                        <div>
+                            <p><span class="font-bold">No Invoice:</span> {{ $detailTransaction->nomor }}</p>
+                            <p><span class="font-bold">Pelanggan:</span> {{ $detailTransaction->pelanggan->nama ?? 'Umum' }}</p>
+                            <p><span class="font-bold">Kasir:</span> {{ $detailTransaction->kasir->name ?? '-' }}</p>
+                        </div>
+                        <div class="text-right">
+                            <p><span class="font-bold">Tanggal:</span> {{ $detailTransaction->created_at->format('d/m/Y H:i') }}</p>
+                            <p><span class="font-bold">Metode:</span> {{ ucfirst($detailTransaction->metode_pembayaran) }}</p>
+                        </div>
+                    </div>
+                    <div class="overflow-y-auto max-h-[40vh] border rounded-lg dark:border-gray-700 custom-scrollbar">
+                        <table class="min-w-full divide-y dark:divide-gray-800">
+                            <thead class="bg-gray-50 dark:bg-gray-900 sticky top-0">
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-xs font-bold text-gray-500 uppercase">Item</th>
+                                    <th class="px-4 py-2 text-center text-xs font-bold text-gray-500 uppercase">Qty</th>
+                                    <th class="px-4 py-2 text-right text-xs font-bold text-gray-500 uppercase">Harga</th>
+                                    <th class="px-4 py-2 text-right text-xs font-bold text-gray-500 uppercase">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y dark:divide-gray-700">
+                                @foreach($detailTransaction->details as $det)
+                                <tr>
+                                    <td class="px-4 py-2 text-sm text-gray-800 dark:text-gray-200 font-bold">{{ $det->produk->nama ?? 'Item' }}</td>
+                                    <td class="px-4 py-2 text-sm text-center">{{ number_format($det->jumlah) }}</td>
+                                    <td class="px-4 py-2 text-sm text-right">Rp {{ number_format($det->harga) }}</td>
+                                    <td class="px-4 py-2 text-sm text-right font-black">Rp {{ number_format($det->subtotal) }}</td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-4 pt-4 border-t dark:border-gray-700 text-right">
+                        <div class="text-sm"><span class="text-gray-500">Subtotal:</span> <span class="font-bold">Rp {{ number_format($detailTransaction->subtotal) }}</span></div>
+                        @if($detailTransaction->diskon_nilai > 0)
+                        <div class="text-sm"><span class="text-gray-500">Diskon:</span> <span class="font-bold text-red-500">-Rp {{ number_format($detailTransaction->diskon_nilai) }}</span></div>
+                        @endif
+                        <div class="text-lg mt-2"><span class="text-gray-500">Total:</span> <span class="font-black text-emerald-600">Rp {{ number_format($detailTransaction->total) }}</span></div>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>

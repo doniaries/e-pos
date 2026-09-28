@@ -39,6 +39,8 @@ class Pos extends Component
     public $showHistoryModal = false;
     public $showPendingModal = false;
     public $showCloseDayModal = false;
+    public $showTransactionDetailModal = false;
+    public $detailTransaction = null;
 
     public $searchQuery = '';
     public $searchResults = [];
@@ -149,6 +151,14 @@ class Pos extends Component
             $this->dispatch('reset-search'); // Focus modal search
         } else {
             $this->dispatch('modal-closed'); // Focus main search
+        }
+    }
+
+    public function showTransactionDetails($id)
+    {
+        $this->detailTransaction = Penjualan::with(['details.produk', 'pelanggan', 'kasir', 'shift'])->find($id);
+        if ($this->detailTransaction) {
+            $this->showTransactionDetailModal = true;
         }
     }
 
