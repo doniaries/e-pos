@@ -30,7 +30,10 @@ class CetakStruk extends Component
         // PERUBAHAN DISINI:
         // Menggunakan view yang ada di folder 'resources/views/print/struk-thermal.blade.php'
         // Menggunakan layout yang ada di 'resources/views/layouts/empty.blade.php'
+        // Pass safe title for PDF saving (replace invalid filename characters)
+        $safeTitle = str_replace(['/', '\\'], '-', $this->penjualan->no_transaksi);
+        
         return view('print.struk-thermal')
-            ->layout('layouts.empty');
+            ->layout('layouts.empty', ['title' => $safeTitle]);
     }
 }

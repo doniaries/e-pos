@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $penjualan->no_transaksi ?? 'Struk' }}</title>
+    <title>{{ $title ?? 'Struk' }}</title>
     <style>
         /* Reset total */
         html,
