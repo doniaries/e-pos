@@ -31,9 +31,12 @@ class CetakStruk extends Component
         // Menggunakan view yang ada di folder 'resources/views/print/struk-thermal.blade.php'
         // Menggunakan layout yang ada di 'resources/views/layouts/empty.blade.php'
         // Pass safe title for PDF saving (replace invalid filename characters)
-        $safeTitle = str_replace(['/', '\\'], '-', $this->penjualan->no_transaksi);
+        // Gunakan ->nomor, karena attribute di model Penjualan adalah 'nomor'
+        $safeTitle = str_replace(['/', '\\'], '-', $this->penjualan->nomor);
         
+        // Gunakan fungsi title() bawaan Livewire agar masuk ke tag <title>
         return view('print.struk-thermal')
-            ->layout('layouts.empty', ['title' => $safeTitle]);
+            ->layout('layouts.empty')
+            ->title($safeTitle);
     }
 }

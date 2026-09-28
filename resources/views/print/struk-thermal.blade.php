@@ -1,17 +1,10 @@
-<!DOCTYPE html>
-<html lang="id">
+<style>
+    @page {
+        margin: 0;
+        size: 80mm auto;
+    }
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Struk {{ $penjualan->nomor }}</title>
-    <style>
-        @page {
-            margin: 0;
-            size: 80mm auto;
-        }
-
-        body {
+    body {
             font-family: 'Courier New', Courier, monospace;
             font-size: 11px;
             /* Ukuran font disesuaikan agar muat */
@@ -117,10 +110,6 @@
             font-size: 10px;
         }
     </style>
-</head>
-
-<body onload="window.print()">
-
     <div class="header text-center">
         <div class="store-name uppercase">{{ $setting->nama_perusahaan ?? 'TOKO ABANG' }}</div>
         <div class="store-info uppercase bold">{{ $setting->slogan ?? 'GROSIR SEMBAKO' }}</div>
@@ -201,6 +190,4 @@
         <div style="letter-spacing: 2px;">{{ strtoupper($setting->printer_footer ?? 'TERIMA KASIH') }}</div>
     </div>
 
-</body>
-
-</html>
+    </div>
