@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\AppInfoResource;
 
 use App\Filament\Resources\AppInfoResource\Pages;
 use App\Models\AppInfo;
@@ -13,21 +13,21 @@ use Filament\Tables\Table;
 class AppInfoResource extends Resource
 {
     protected static ?string $model = AppInfo::class;
-    
+
     protected static ?string $slug = 'app-infos';
 
     protected static ?string $navigationIcon = 'heroicon-o-information-circle';
-    
+
     protected static ?string $navigationLabel = 'Informasi Aplikasi';
-    
+
     protected static ?string $navigationGroup = 'Pengaturan';
-    
+
     protected static ?int $navigationSort = 99;
 
     public static function canAccess(): bool
     {
         /** @var \App\Models\User|null $user */
-        $user = auth()->user();
+        $user = \Illuminate\Support\Facades\Auth::user();
         return $user && $user->hasRole('super_admin');
     }
 

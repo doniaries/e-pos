@@ -67,7 +67,7 @@ class PenjualanObserver
                     'referensi_type' => Penjualan::class,
                     'referensi_id'   => $penjualan->id,
                     'keterangan'     => 'Restore Penjualan #' . $penjualan->nomor,
-                    'user_id'        => auth()->id(),
+                    'user_id'        => \Illuminate\Support\Facades\Auth::id(),
                 ]);
             }
         });

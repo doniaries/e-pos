@@ -147,7 +147,7 @@ class Penjualan extends Model
         $this->saveQuietly();
     }
 
-    public function scopePendingReport($query)
+    public function scopePendingReport(\Illuminate\Database\Eloquent\Builder $query)
     {
         return $query->whereNull('laporan_harian_id')->where('status', 'selesai');
     }

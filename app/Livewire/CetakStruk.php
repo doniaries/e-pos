@@ -8,10 +8,10 @@ use App\Models\Setting;
 
 class CetakStruk extends Component
 {
-    public $penjualan;
-    public $setting;
-    public $lebarKertas;
-    public $isReprint = false;
+    public ?Penjualan $penjualan = null;
+    public ?Setting $setting = null;
+    public ?string $lebarKertas = null;
+    public bool $isReprint = false;
 
     public function mount($id)
     {
@@ -34,9 +34,9 @@ class CetakStruk extends Component
         // Gunakan ->nomor, karena attribute di model Penjualan adalah 'nomor'
         $safeTitle = str_replace(['/', '\\'], '-', $this->penjualan->nomor);
         
-        // Gunakan fungsi title() bawaan Livewire agar masuk ke tag <title>
-        return view('print.struk-thermal')
-            ->layout('layouts.empty')
-            ->title($safeTitle);
+        /** @var mixed $view */
+        $view = view('print.struk-thermal');
+        
+        return $view->layout('layouts.empty')->title($safeTitle);
     }
 }

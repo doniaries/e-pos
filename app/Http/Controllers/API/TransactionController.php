@@ -179,7 +179,7 @@ class TransactionController extends Controller
     /**
      * Detail satu transaksi.
      */
-    public function show($id)
+    public function show(int|string $id)
     {
         $transaction = Penjualan::with(['details.produk', 'pelanggan', 'pembayarans'])->find($id);
 
