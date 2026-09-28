@@ -44,7 +44,7 @@ class UserSeeder extends Seeder
         foreach ($users as $userData) {
             $user = User::create($userData);
 
-            if ($userData['tipe'] === 'admin') {
+            if ($userData['tipe'] === 'admin' || $userData['tipe'] === 'super admin') {
                 $user->assignRole('super_admin');
             } elseif ($userData['tipe'] === 'kasir') {
                 // Ensure role exists as ShieldSeeder might not create it
