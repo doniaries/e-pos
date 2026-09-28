@@ -28,7 +28,8 @@ class ShieldSeeder extends Seeder
                     "view_role","view_any_role","create_role","update_role","delete_role","delete_any_role",
                     "view_satuan","view_any_satuan","create_satuan","update_satuan","restore_satuan","restore_any_satuan","replicate_satuan","reorder_satuan","delete_satuan","delete_any_satuan","force_delete_satuan","force_delete_any_satuan",
                     "view_setting","view_any_setting","create_setting","update_setting","restore_setting","restore_any_setting","replicate_setting","reorder_setting","delete_setting","delete_any_setting","force_delete_setting","force_delete_any_setting",
-                    "view_user","view_any_user","create_user","update_user","restore_user","restore_any_user","replicate_user","reorder_user","delete_user","delete_any_user","force_delete_user","force_delete_any_user"
+                    "view_user","view_any_user","create_user","update_user","restore_user","restore_any_user","replicate_user","reorder_user","delete_user","delete_any_user","force_delete_user","force_delete_any_user",
+                    "view_app::info","view_any_app::info","create_app::info","update_app::info","restore_app::info","restore_any_app::info","replicate_app::info","reorder_app::info","delete_app::info","delete_any_app::info","force_delete_app::info","force_delete_any_app::info"
                 ]
             },
             {
