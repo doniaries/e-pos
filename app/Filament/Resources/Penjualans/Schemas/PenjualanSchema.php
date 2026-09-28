@@ -298,8 +298,12 @@ class PenjualanSchema
                                                     // Cek jika status bukan pending, pembayaran harus lunas/lebih
                                                     // User minta pending transaksi, jadi bayar bisa < total, tapi status jadi pending/belum_lunas
 
-                                                    $isPaid = ($data['bayar'] ?? 0) >= ($data['total'] ?? 0);
-                                                    $statusPembayaran = $isPaid ? 'lunas' : 'belum_lunas';
+                                                    // [Bug #5 Fix] 'belum_lunas' tidak ada di enum DB.
+                                                    // Nilai valid: 'lunas', 'hutang', 'bayar_sebagian'
+                                                    $isPaid           = ($data['bayar'] ?? 0) >= ($data['total'] ?? 0);
+                                                    $statusPembayaran = $isPaid
+                                                        ? Penjualan::PAYMENT_PAID    // 'lunas'
+                                                        : Penjualan::PAYMENT_UNPAID; // 'hutang'
                                                     $status = $isPaid ? 'selesai' : 'pending';
 
                                                     // Buat penjualan
@@ -332,11 +336,13 @@ class PenjualanSchema
                                                         }
 
                                                         $penjualan->details()->create([
-                                                            'produk_id' => $produk->id,
-                                                            'jumlah' => $detail['jumlah'],
-                                                            'satuan_id' => $produk->satuan_id,
-                                                            'harga' => $detail['harga'],
-                                                            'subtotal' => $detail['subtotal'],
+                                                            'produk_id'   => $produk->id,
+                                                            'nama_produk' => $produk->nama,       // [S3] Snapshot nama
+                                                            'harga_beli'  => $produk->harga_beli, // [S3] Snapshot modal
+                                                            'jumlah'      => $detail['jumlah'],
+                                                            'satuan_id'   => $produk->satuan_id,
+                                                            'harga'       => $detail['harga'],
+                                                            'subtotal'    => $detail['subtotal'],
                                                         ]);
 
                                                         // Catat di Kartu Stok

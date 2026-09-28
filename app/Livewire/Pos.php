@@ -352,106 +352,128 @@ class Pos extends Component
         }
 
         try {
+            // [S6 Fix] Upload file SEBELUM transaksi DB dimulai.
+            // Jika upload gagal, tidak ada transaksi setengah jadi.
+            // Jika DB rollback setelah ini, file akan dibersihkan secara terpisah
+            // (atau gunakan queue job untuk cleanup yatim piatu).
+            $buktiPath = null;
+            if ($this->paymentProof) {
+                $buktiPath = $this->paymentProof->store('bukti_pembayaran', 'public');
+            }
+
             $retryCount = 0;
             $maxRetries = 3;
-            $penjualan = null;
+            $penjualan  = null;
 
             while ($retryCount < $maxRetries) {
                 try {
                     DB::beginTransaction();
 
                     $paymentStatus = $this->calculatePaymentStatus();
-                    $customerId = $this->customerType === 'pelanggan' ? $this->customer : null;
+                    $customerId    = $this->customerType === 'pelanggan' ? $this->customer : null;
 
                     // Cek apakah ini transaksi baru atau melanjutkan draft
                     if ($this->activeSaleId) {
                         $penjualan = Penjualan::find($this->activeSaleId);
                         $penjualan->update([
-                            'pelanggan_id' => $customerId,
-                            'subtotal' => $this->grandTotal,
-                            'total' => $this->grandTotal,
-                            'bayar' => $this->payment,
-                            'kembali' => $this->change,
+                            'pelanggan_id'      => $customerId,
+                            'subtotal'          => $this->grandTotal,
+                            'total'             => $this->grandTotal,
+                            'bayar'             => $this->payment,
+                            'kembali'           => $this->change,
                             'metode_pembayaran' => strtolower($this->paymentMethod),
-                            'nama_bank' => $this->paymentReference,
+                            'nama_bank'         => $this->paymentReference,
                             'status_pembayaran' => $paymentStatus,
-                            'status' => Penjualan::STATUS_COMPLETED,
-                            'user_id' => auth()->id(),
+                            'status'            => Penjualan::STATUS_COMPLETED,
+                            'user_id'           => auth()->id(),
                         ]);
                         $penjualan->details()->delete();
                     } else {
                         $penjualan = Penjualan::create([
-                            'nomor' => Penjualan::generateNomor(),
-                            'user_id' => auth()->id(),
-                            'shift_id' => $this->activeShiftId,
-                            'pelanggan_id' => $customerId,
-                            'subtotal' => $this->grandTotal,
-                            'diskon_persen' => 0,
-                            'diskon_nilai' => 0,
-                            'pajak_persen' => 0,
-                            'pajak_nilai' => 0,
-                            'total' => $this->grandTotal,
-                            'bayar' => $this->payment,
-                            'kembali' => $this->change,
+                            'nomor'             => Penjualan::generateNomor(), // [Bug #4] generateNomor kini lockForUpdate
+                            'user_id'           => auth()->id(),
+                            'shift_id'          => $this->activeShiftId,
+                            'pelanggan_id'      => $customerId,
+                            'subtotal'          => $this->grandTotal,
+                            'diskon_persen'     => 0,
+                            'diskon_nilai'      => 0,
+                            'pajak_persen'      => 0,
+                            'pajak_nilai'       => 0, // [S2 Fix] Kini masuk $fillable, tidak diabaikan lagi
+                            'total'             => $this->grandTotal,
+                            'bayar'             => $this->payment,
+                            'kembali'           => $this->change,
                             'metode_pembayaran' => strtolower($this->paymentMethod),
-                            'nama_bank' => $this->paymentReference,
+                            'nama_bank'         => $this->paymentReference,
                             'status_pembayaran' => $paymentStatus,
-                            'status' => Penjualan::STATUS_COMPLETED
+                            'status'            => Penjualan::STATUS_COMPLETED,
                         ]);
                     }
 
-                    // Update customer debt if not fully paid
+                    // Update hutang pelanggan jika belum lunas
                     if ($paymentStatus !== Penjualan::PAYMENT_PAID) {
                         $this->updateCustomerDebt($customerId, $this->grandTotal, $this->payment);
                     }
 
                     foreach ($this->cart as $productId => $item) {
-                        $produk = Produk::findOrFail($productId);
+                        // [Bug #4 Fix] lockForUpdate mencegah oversell oleh dua kasir bersamaan
+                        $produk = Produk::lockForUpdate()->findOrFail($productId);
+
                         if ($produk->stok < $item['quantity']) {
-                            throw new \Exception("Stok {$produk->nama} tidak mencukupi!");
+                            throw new \Exception("Stok {$produk->nama} tidak mencukupi! Sisa: {$produk->stok}");
                         }
 
+                        // [S3 Fix] Simpan snapshot nama & harga modal saat transaksi
                         PenjualanDetail::create([
-                            'penjualan_id' => $penjualan->id,
-                            'produk_id' => $productId,
-                            'jumlah' => $item['quantity'],
-                            'satuan_id' => $item['satuan_id'],
-                            'harga' => $item['price'],
+                            'penjualan_id'  => $penjualan->id,
+                            'produk_id'     => $productId,
+                            'nama_produk'   => $produk->nama,       // Snapshot
+                            'harga_beli'    => $produk->harga_beli, // Snapshot modal
+                            'jumlah'        => $item['quantity'],
+                            'satuan_id'     => $item['satuan_id'],
+                            'harga'         => $item['price'],
                             'diskon_persen' => 0,
-                            'diskon_nilai' => 0,
-                            'subtotal' => $item['subtotal'],
-                            'catatan' => $item['catatan'] ?? null
+                            'diskon_nilai'  => 0,
+                            'subtotal'      => $item['subtotal'],
+                            'catatan'       => $item['catatan'] ?? null,
                         ]);
 
-                        $produk->decrement('stok', $item['quantity']);
-                    }
-
-                    // Handle File Upload
-                    $buktiPath = null;
-                    if ($this->paymentProof) {
-                        $buktiPath = $this->paymentProof->store('bukti_pembayaran', 'public');
+                        // [Bug #2 & #3 Fix] Catat ke ledger stoks (negatif = keluar)
+                        // StokObserver::created() akan update produks.stok secara otomatis
+                        // PenjualanObserver::deleted() akan hapus baris ini → StokObserver::deleted()
+                        // menjalankan decrement(-qty) = increment(qty) → stok kembali saat void
+                        \App\Models\Stok::create([
+                            'produk_id'      => $productId,
+                            'jenis'          => 'penjualan',
+                            'jumlah'         => -$item['quantity'], // Negatif = stok keluar
+                            'referensi_type' => Penjualan::class,
+                            'referensi_id'   => $penjualan->id,
+                            'keterangan'     => 'Penjualan POS #' . $penjualan->nomor,
+                            'user_id'        => auth()->id(),
+                            'shift_id'       => $this->activeShiftId,
+                        ]);
                     }
 
                     Pembayaran::create([
-                        'penjualan_id' => $penjualan->id,
-                        'metode' => strtolower($this->paymentMethod),
-                        'jumlah' => $this->payment,
-                        'catatan' => 'Pembayaran POS',
-                        'keterangan' => $this->paymentReference,
-                        'bukti_pembayaran' => $buktiPath
+                        'penjualan_id'   => $penjualan->id,
+                        'metode'         => strtolower($this->paymentMethod),
+                        'jumlah'         => $this->payment,
+                        'catatan'        => 'Pembayaran POS',
+                        'keterangan'     => $this->paymentReference,
+                        'bukti_pembayaran' => $buktiPath, // [S6] Path sudah ada dari sebelum transaksi
                     ]);
 
                     DB::commit();
-                    break; // Success, exit retry loop
+                    break; // Berhasil, keluar dari loop retry
 
-                } catch (\Illuminate\Database\QueryException $e) {
+                } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
+                    // [Bug #4 Fix] Portable exception (Laravel 10+), tidak pakai errorInfo[1] == 1062 MySQL-specific
                     DB::rollBack();
-                    if ($e->errorInfo[1] == 1062 && $retryCount < $maxRetries - 1) {
+                    if ($retryCount < $maxRetries - 1) {
                         $retryCount++;
-                        usleep(100000); // Small delay before retry
+                        usleep(100000 * $retryCount); // Backoff bertahap
                         continue;
                     }
-                    throw $e;
+                    throw new \Exception('Gagal membuat nomor nota unik. Coba lagi.');
                 } catch (\Exception $e) {
                     DB::rollBack();
                     throw $e;
@@ -461,12 +483,19 @@ class Pos extends Component
             $this->showPaymentModal = false;
             $this->resetCart();
             $this->dispatch('transaction-success', [
-                'nomor' => $penjualan->nomor ?? ''
+                'nomor' => $penjualan->nomor ?? '',
             ]);
+
         } catch (\Exception $e) {
-            session()->flash('error', 'Error: ' . $e->getMessage());
+            // [S7 Fix] Log error internal, tampilkan pesan yang ramah ke kasir
+            \Illuminate\Support\Facades\Log::error('POS processSale error: ' . $e->getMessage(), [
+                'user_id' => auth()->id(),
+                'cart'    => $this->cart,
+            ]);
+            session()->flash('error', 'Transaksi gagal: ' . $e->getMessage());
         }
     }
+
 
     public function render()
     {
@@ -651,7 +680,8 @@ class Pos extends Component
             }, "laporan-harian-" . now()->format('Y-m-d') . ".pdf");
         } catch (\Exception $e) {
             DB::rollBack();
-            session()->flash('error', 'Tutup Hari Gagal: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('POS tutupHari error: ' . $e->getMessage(), ['user_id' => auth()->id()]);
+            session()->flash('error', 'Tutup Hari gagal. Silakan coba lagi atau hubungi admin.');
         }
     }
     #[Computed]
@@ -778,7 +808,8 @@ class Pos extends Component
             session()->flash('message', 'Transaksi berhasil di-pending.');
         } catch (\Exception $e) {
             DB::rollBack();
-            session()->flash('error', 'Gagal pending: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('POS savePending error: ' . $e->getMessage(), ['user_id' => auth()->id()]);
+            session()->flash('error', 'Gagal menyimpan sebagai pending. Silakan coba lagi.');
         }
     }
 
@@ -856,97 +887,103 @@ class Pos extends Component
         try {
             DB::beginTransaction();
 
-            // Same logic as processSale but returns the penjualan ID
             if ($this->activeSaleId) {
-                $penjualan = Penjualan::find($this->activeSaleId);
+                $penjualan     = Penjualan::find($this->activeSaleId);
                 $paymentStatus = $this->calculatePaymentStatus();
-                $customerId = $this->customerType === 'pelanggan' ? $this->customer : null;
+                $customerId    = $this->customerType === 'pelanggan' ? $this->customer : null;
 
                 $penjualan->update([
-                    'pelanggan_id' => $customerId,
-                    'subtotal' => $this->grandTotal,
-                    'total' => $this->grandTotal,
-                    'bayar' => $this->payment,
-                    'kembali' => $this->change,
+                    'pelanggan_id'      => $customerId,
+                    'subtotal'          => $this->grandTotal,
+                    'total'             => $this->grandTotal,
+                    'bayar'             => $this->payment,
+                    'kembali'           => $this->change,
                     'status_pembayaran' => $paymentStatus,
-                    'status' => 'selesai',
-                    'user_id' => auth()->id(),
+                    'status'            => Penjualan::STATUS_COMPLETED,
+                    'user_id'           => auth()->id(),
                 ]);
 
-                // Update customer debt if partial/no payment
-                if ($paymentStatus !== 'lunas') {
+                if ($paymentStatus !== Penjualan::PAYMENT_PAID) {
                     $this->updateCustomerDebt($customerId, $this->grandTotal, $this->payment);
                 }
                 $penjualan->details()->delete();
             } else {
                 $paymentStatus = $this->calculatePaymentStatus();
-                $customerId = $this->customerType === 'pelanggan' ? $this->customer : null;
+                $customerId    = $this->customerType === 'pelanggan' ? $this->customer : null;
 
                 $penjualan = Penjualan::create([
-                    'nomor' => Penjualan::generateNomor(),
-                    'user_id' => auth()->id(),
-                    'pelanggan_id' => $customerId,
-                    'subtotal' => $this->grandTotal,
-                    'diskon_persen' => 0,
-                    'diskon_nilai' => 0,
-                    'pajak_persen' => 0,
-                    'pajak_nilai' => 0,
-                    'total' => $this->grandTotal,
-                    'bayar' => $this->payment,
-                    'kembali' => $this->change,
+                    'nomor'             => Penjualan::generateNomor(), // [Bug #4] lockForUpdate di dalam generateNomor
+                    'user_id'           => auth()->id(),
+                    'pelanggan_id'      => $customerId,
+                    'subtotal'          => $this->grandTotal,
+                    'diskon_persen'     => 0,
+                    'diskon_nilai'      => 0,
+                    'pajak_persen'      => 0,
+                    'pajak_nilai'       => 0, // [S2 Fix] Kini ada di $fillable
+                    'total'             => $this->grandTotal,
+                    'bayar'             => $this->payment,
+                    'kembali'           => $this->change,
                     'status_pembayaran' => $paymentStatus,
-                    'status' => 'selesai'
+                    'status'            => Penjualan::STATUS_COMPLETED,
                 ]);
 
-                // Update customer debt if partial/no payment
-                if ($paymentStatus !== 'lunas') {
+                if ($paymentStatus !== Penjualan::PAYMENT_PAID) {
                     $this->updateCustomerDebt($customerId, $this->grandTotal, $this->payment);
                 }
             }
 
             foreach ($this->cart as $productId => $item) {
-                $produk = Produk::findOrFail($productId);
+                // [Bug #4 Fix] lockForUpdate cegah oversell konkuren
+                $produk = Produk::lockForUpdate()->findOrFail($productId);
 
                 if ($produk->stok < $item['quantity']) {
-                    throw new \Exception("Stok {$produk->nama} tidak mencukupi!");
+                    throw new \Exception("Stok {$produk->nama} tidak mencukupi! Sisa: {$produk->stok}");
                 }
 
+                // [S3 Fix] Simpan snapshot nama & harga modal
                 PenjualanDetail::create([
-                    'penjualan_id' => $penjualan->id,
-                    'produk_id' => $productId,
-                    'jumlah' => $item['quantity'],
-                    'satuan_id' => $item['satuan_id'],
-                    'harga' => $item['price'],
+                    'penjualan_id'  => $penjualan->id,
+                    'produk_id'     => $productId,
+                    'nama_produk'   => $produk->nama,
+                    'harga_beli'    => $produk->harga_beli,
+                    'jumlah'        => $item['quantity'],
+                    'satuan_id'     => $item['satuan_id'],
+                    'harga'         => $item['price'],
                     'diskon_persen' => 0,
-                    'diskon_nilai' => 0,
-                    'subtotal' => $item['subtotal']
+                    'diskon_nilai'  => 0,
+                    'subtotal'      => $item['subtotal'],
                 ]);
 
-                $produk->decrement('stok', $item['quantity']);
+                // [Bug #2 & #3 Fix] Catat ke ledger stoks (negatif = keluar)
+                \App\Models\Stok::create([
+                    'produk_id'      => $productId,
+                    'jenis'          => 'penjualan',
+                    'jumlah'         => -$item['quantity'],
+                    'referensi_type' => Penjualan::class,
+                    'referensi_id'   => $penjualan->id,
+                    'keterangan'     => 'Penjualan POS #' . $penjualan->nomor,
+                    'user_id'        => auth()->id(),
+                ]);
             }
 
             Pembayaran::create([
                 'penjualan_id' => $penjualan->id,
-                'metode' => strtolower($this->paymentMethod),
-                'jumlah' => $this->payment,
-                'catatan' => 'Pembayaran POS'
+                'metode'       => strtolower($this->paymentMethod),
+                'jumlah'       => $this->payment,
+                'catatan'      => 'Pembayaran POS',
             ]);
 
             DB::commit();
 
-            // Trigger print based on setting or session override
-            $connectionType = $this->printerConnectionMode; // Uses session/default
-
+            // Cetak struk
+            $connectionType = $this->printerConnectionMode;
             Log::info('POS Print Flow - Connection Type: ' . $connectionType);
 
             if ($connectionType === 'bluetooth') {
-                // 1. Bluetooth Flow (Web Bluetooth API)
                 Log::info('POS: Taking Bluetooth print path');
                 try {
                     $printerService = new ThermalPrinterService();
-                    // Override setting temporarily for service to know context if needed, 
-                    // though getReceiptBinary uses DummyPrintConnector so it's fine.
-                    $binaryData = $printerService->getReceiptBinary($penjualan);
+                    $binaryData     = $printerService->getReceiptBinary($penjualan);
 
                     if ($binaryData) {
                         $this->dispatch('print-bluetooth', ['data' => $binaryData]);
@@ -959,45 +996,39 @@ class Pos extends Component
                     $this->dispatch('pos-error', ['message' => 'Gagal cetak Bluetooth: ' . $e->getMessage()]);
                 }
             } elseif ($connectionType === 'usb') {
-                // 2. Direct USB Print (Server-side / Localhost)
                 Log::info('POS: Taking Direct USB print path');
                 try {
                     $printerService = new ThermalPrinterService();
-                    $result = $printerService->printReceipt($penjualan);
+                    $result         = $printerService->printReceipt($penjualan);
 
                     if (!$result['success']) {
                         throw new \Exception($result['message']);
                     }
 
                     $this->dispatch('transaction-success', ['nomor' => $penjualan->nomor]);
-                    // Assuming printReceipt closes successfully.
                 } catch (\Exception $e) {
                     Log::error('USB Print Error: ' . $e->getMessage());
-                    // If USB direct fails (e.g. not configured), fall back to browser print?
-                    // Or just show error. User requested "Only USB" earlier.
                     $this->dispatch('pos-error', ['message' => 'Gagal cetak USB: ' . $e->getMessage()]);
-
-                    // Optional fallback removed per user request
-                    // $this->dispatch('open-print-window', ['id' => $penjualan->id]);
                 }
             } else {
-                // 3. Browser Print (Default Fallback)
                 Log::info('POS: Taking browser print path');
                 $this->dispatch('open-print-window', ['id' => $penjualan->id]);
             }
 
-            // Close modal and reset cart
             $this->showPaymentModal = false;
             $this->resetCart();
-
             $this->dispatch('transaction-success', [
-                'nomor' => $penjualan->nomor ?? ''
+                'nomor' => $penjualan->nomor ?? '',
             ]);
+
         } catch (\Exception $e) {
             DB::rollBack();
-            session()->flash('error', 'Error: ' . $e->getMessage());
+            // [S7 Fix] Log detail, tampilkan pesan ramah ke kasir
+            Log::error('POS processAndPrint error: ' . $e->getMessage(), ['user_id' => auth()->id()]);
+            session()->flash('error', 'Transaksi gagal: ' . $e->getMessage());
         }
     }
+
 
     public function reprint($id)
     {
@@ -1043,7 +1074,8 @@ class Pos extends Component
                 $this->dispatch('open-print-window', ['id' => $penjualan->id]);
             }
         } catch (\Exception $e) {
-            session()->flash('error', 'Gagal cetak ulang: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('POS reprint error: ' . $e->getMessage(), ['user_id' => auth()->id()]);
+            session()->flash('error', 'Gagal cetak ulang. Silakan coba lagi.');
         }
     }
 }

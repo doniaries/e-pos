@@ -8,20 +8,29 @@ use App\Models\Stok;
 class PenjualanObserver
 {
     /**
-     * Handle the Penjualan "deleted" event.
+     * Handle the Penjualan "deleted" (soft delete / void) event.
+     *
+     * [Bug #2 Fix] Stok dikembalikan dengan benar karena:
+     *   - POS sekarang mencatat ke tabel stoks via Stok::create() dengan jumlah negatif
+     *   - Saat Stok dihapus di sini, StokObserver::deleted() menjalankan:
+     *     $stok->produk()->decrement('stok', $stok->jumlah)
+     *     decrement(-5) = increment 5 → stok kembali otomatis
      */
     public function deleted(Penjualan $penjualan): void
     {
-        // 1. Soft delete associated details
+        // 1. Soft delete detail transaksi
         $penjualan->details()->delete();
 
-        // 2. Delete associated Stok records (this reverses master stock via StokObserver)
+        // 2. Hapus entri stok ledger — StokObserver::deleted() akan otomatis
+        //    membalik perubahan stok ke tabel produks (karena jumlah negatif jadi increment)
         Stok::where('referensi_type', get_class($penjualan))
             ->where('referensi_id', $penjualan->id)
-            ->delete();
+            ->each(function (Stok $stok) {
+                $stok->delete(); // Trigger StokObserver::deleted()
+            });
 
-        // 3. Reverse customer debt if applicable
-        if ($penjualan->pelanggan_id && $penjualan->status_pembayaran !== 'lunas') {
+        // 3. Kembalikan hutang pelanggan jika ada
+        if ($penjualan->pelanggan_id && $penjualan->status_pembayaran !== Penjualan::PAYMENT_PAID) {
             $debtAmount = $penjualan->total - $penjualan->bayar;
             if ($debtAmount > 0) {
                 $penjualan->pelanggan()->decrement('hutang', $debtAmount);
@@ -30,15 +39,46 @@ class PenjualanObserver
     }
 
     /**
-     * Handle the Penjualan "restored" event.
+     * Handle the Penjualan "restored" event (un-void).
+     *
+     * [R5 Fix] Sebelumnya logika restore stok tidak diimplementasi (diakui di komentar).
+     *           Sekarang: restore detail lalu re-create entri stoks agar StokObserver
+     *           mengurangi stok kembali seperti semula.
      */
     public function restored(Penjualan $penjualan): void
     {
-        // Restore details
+        // 1. Restore detail transaksi
         $penjualan->details()->withTrashed()->restore();
 
-        // Note: Full stock restoration logic would involve re-creating stok records
-        // which matches the complex logic in the POS/Livewire component.
+        // 2. Re-create entri stok ledger untuk setiap item
+        //    StokObserver::created() akan update produks.stok secara otomatis
+        $penjualan->details()->each(function ($detail) use ($penjualan) {
+            // Pastikan tidak ada duplikat (jika restore dipanggil berkali-kali)
+            $exists = Stok::where('referensi_type', Penjualan::class)
+                ->where('referensi_id', $penjualan->id)
+                ->where('produk_id', $detail->produk_id)
+                ->exists();
+
+            if (! $exists) {
+                Stok::create([
+                    'produk_id'      => $detail->produk_id,
+                    'jenis'          => 'penjualan',
+                    'jumlah'         => -abs($detail->jumlah), // Pastikan negatif
+                    'referensi_type' => Penjualan::class,
+                    'referensi_id'   => $penjualan->id,
+                    'keterangan'     => 'Restore Penjualan #' . $penjualan->nomor,
+                    'user_id'        => auth()->id(),
+                ]);
+            }
+        });
+
+        // 3. Tambah kembali hutang pelanggan jika relevan
+        if ($penjualan->pelanggan_id && $penjualan->status_pembayaran !== Penjualan::PAYMENT_PAID) {
+            $debtAmount = $penjualan->total - $penjualan->bayar;
+            if ($debtAmount > 0) {
+                $penjualan->pelanggan()->increment('hutang', $debtAmount);
+            }
+        }
     }
 
     /**
@@ -46,7 +86,6 @@ class PenjualanObserver
      */
     public function forceDeleted(Penjualan $penjualan): void
     {
-        // Ensure everything is cleaned up even on force delete
         $penjualan->details()->withTrashed()->forceDelete();
     }
 }

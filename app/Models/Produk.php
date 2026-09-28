@@ -42,13 +42,13 @@ class Produk extends Model
     ];
 
     protected $casts = [
-        'harga_beli' => 'integer',
-        'harga_jual' => 'integer',
+        'harga_beli'   => 'integer',
+        'harga_jual'   => 'integer',
         'harga_grosir' => 'integer',
-        'stok' => 'integer',
-        'stok_minimum' => 'integer',
-        'stok_maksimum' => 'integer',
-        'spesifikasi' => 'array',
+        'stok'         => 'decimal:3', // [S4 Fix] Decimal untuk satuan pecahan (kg, liter, dll)
+        'stok_minimum' => 'decimal:3',
+        'stok_maksimum' => 'decimal:3',
+        'spesifikasi'  => 'array',
     ];
 
     // Cache query yang sering digunakan
@@ -88,8 +88,11 @@ class Produk extends Model
 
     protected function nama(): Attribute
     {
+        // [S5 Fix] Pindahkan UPPERCASE ke sisi tampil (get), bukan sisi tulis (set).
+        // Sebelumnya set: strtoupper() memutasi data permanen di DB sehingga tidak bisa
+        // dikembalikan ke format asli tanpa update massal. Sekarang DB menyimpan format asli.
         return Attribute::make(
-            set: fn($value) => strtoupper($value),
+            get: fn($value) => strtoupper($value),
         );
     }
 }

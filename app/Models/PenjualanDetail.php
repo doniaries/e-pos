@@ -10,23 +10,27 @@ class PenjualanDetail extends Model
     use SoftDeletes;
 
     protected $table = 'penjualan_details';
+
     protected $fillable = [
         'penjualan_id',
         'produk_id',
+        'nama_produk',  // [S3 Fix] Snapshot nama produk saat transaksi
+        'harga_beli',   // [S3 Fix] Snapshot harga modal untuk laporan laba akurat
         'jumlah',
         'satuan_id',
         'harga',
         'diskon_persen',
         'diskon_nilai',
         'subtotal',
-        'catatan'
+        'catatan',
     ];
 
     protected $casts = [
-        'jumlah' => 'integer',
-        'harga' => 'decimal:0',
+        'jumlah'       => 'decimal:3', // [S4 Fix] Decimal agar bisa jual 0.5 kg, dll
+        'harga'        => 'decimal:0',
+        'harga_beli'   => 'decimal:0',
         'diskon_persen' => 'integer',
-        'subtotal' => 'decimal:0'
+        'subtotal'     => 'decimal:0',
     ];
 
     public function penjualan()
