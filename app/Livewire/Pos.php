@@ -282,6 +282,12 @@ class Pos extends Component
 
     public function mount()
     {
+        // [Fix] Cegah akses kasir jika toko ditutup
+        $setting = Setting::first();
+        if ($setting && $setting->is_toko_tutup && !auth()->user()->hasRole('super_admin')) {
+            abort(403, 'Toko sedang ditutup. Anda tidak dapat mengakses kasir.');
+        }
+
         // Check for unclosed transactions from previous days
         $oldUnclosedTransactions = Penjualan::whereNull('laporan_harian_id')
             ->where('status', 'selesai')
