@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d4bf8655afc5b3d3234fd7d5c07fb7a7",
+    "content-hash": "9b3725a909526de05486b532d9230aa8",
     "packages": [
         {
             "name": "akaunting/laravel-money",
@@ -2938,6 +2938,134 @@
                 }
             ],
             "time": "2025-12-27T19:43:20+00:00"
+        },
+        {
+            "name": "gsferro/filament-odometer-easy",
+            "version": "v1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gsferro/filament-odometer-easy.git",
+                "reference": "a65caae69a46412494f5f72382d3a8fb53b518d6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/gsferro/filament-odometer-easy/zipball/a65caae69a46412494f5f72382d3a8fb53b518d6",
+                "reference": "a65caae69a46412494f5f72382d3a8fb53b518d6",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^3.2|^4.0|^5.0",
+                "gsferro/odometer-easy": "^1.0",
+                "php": "^8.2",
+                "spatie/laravel-package-tools": "^1.15.0"
+            },
+            "require-dev": {
+                "larastan/larastan": "^3.0",
+                "laravel/pint": "^1.0",
+                "nunomaduro/collision": "^8.0",
+                "orchestra/testbench": "^9.0|^10.0|^11.0",
+                "pestphp/pest": "^3.7|^4.0",
+                "pestphp/pest-plugin-arch": "^3.0|^4.0",
+                "pestphp/pest-plugin-laravel": "^3.0|^4.0",
+                "pestphp/pest-plugin-livewire": "^3.0|^4.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "FilamentOdometerEasy": "Gsferro\\FilamentOdometerEasy\\Facades\\FilamentOdometerEasy"
+                    },
+                    "providers": [
+                        "Gsferro\\FilamentOdometerEasy\\FilamentOdometerEasyServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Gsferro\\FilamentOdometerEasy\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "gsferro",
+                    "email": "g_santana26@yahoo.com.br",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Animated counters for Filament v3, v4 and v5 — tables, infolists, stats and navigation badges — powered by number-flow (default) or odometer.js.",
+            "homepage": "https://github.com/gsferro/filament-odometer-easy",
+            "keywords": [
+                "Odometer",
+                "animation",
+                "counter",
+                "dashboard",
+                "filament",
+                "filament-odometer-easy",
+                "filament-plugin",
+                "filamentphp",
+                "gsferro",
+                "laravel",
+                "number-flow"
+            ],
+            "support": {
+                "issues": "https://github.com/gsferro/filament-odometer-easy/issues",
+                "source": "https://github.com/gsferro/filament-odometer-easy"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/gsferro",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-08-01T22:53:16+00:00"
+        },
+        {
+            "name": "gsferro/odometer-easy",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/GuilhermeFerro/laravel-odometer-easy.git",
+                "reference": "ffed3f3a7ba43d1cbca1b6b137cd26a245f7dc50"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/GuilhermeFerro/laravel-odometer-easy/zipball/ffed3f3a7ba43d1cbca1b6b137cd26a245f7dc50",
+                "reference": "ffed3f3a7ba43d1cbca1b6b137cd26a245f7dc50",
+                "shasum": ""
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Gsferro\\OdometerEasy\\Providers\\OdometerEasyServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Gsferro\\OdometerEasy\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Guilherme Ferro",
+                    "email": "gsferroti@gmail.com"
+                }
+            ],
+            "description": "Use the plugin odometer in project Laravel easy",
+            "support": {
+                "issues": "https://github.com/GuilhermeFerro/laravel-odometer-easy/issues",
+                "source": "https://github.com/GuilhermeFerro/laravel-odometer-easy/tree/v1.0"
+            },
+            "time": "2023-01-28T01:17:09+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",

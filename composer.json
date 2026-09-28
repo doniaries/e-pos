@@ -15,6 +15,7 @@
         "eightynine/filament-excel-import": "^3.1",
         "filament/filament": "^3.2",
         "flowframe/laravel-trend": "^0.4.0",
+        "gsferro/filament-odometer-easy": "*",
         "laravel-lang/common": "^6.7",
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.3",
