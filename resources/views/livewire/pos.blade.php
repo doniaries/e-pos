@@ -427,23 +427,19 @@
                             </td>
                             <td class="px-6 py-3 text-sm text-gray-800 dark:text-gray-300 font-bold">
                                 {{ $item['name'] }}
-                                <div class="mt-1">
-                                    <input type="text" wire:change="updateItemNote('{{ $id }}', $event.target.value)" value="{{ $item['catatan'] ?? '' }}" placeholder="Catatan/IMEI/SN (Opsional)" class="text-xs border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 rounded px-2 py-1 w-full focus:ring-blue-500 focus:border-blue-500 font-normal transition-colors">
+                                <div class="mt-1.5">
+                                    <input type="text" wire:change="updateItemNote('{{ $id }}', $event.target.value)" value="{{ $item['catatan'] ?? '' }}" placeholder="+ Tambah Catatan/IMEI (Opsional)" class="text-xs border-transparent hover:border-gray-300 focus:border-blue-500 bg-transparent hover:bg-gray-50 focus:bg-white dark:hover:bg-gray-700 dark:focus:bg-gray-800 rounded-md px-2 py-1 w-full font-medium text-gray-500 focus:text-gray-900 dark:text-gray-400 dark:focus:text-gray-100 transition-all placeholder:text-gray-400 shadow-sm focus:shadow">
                                 </div>
                             </td>
                             <td class="px-6 py-3 whitespace-nowrap">
                                 <div class="flex justify-center items-center">
-                                    <div class="flex items-center border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden shadow-sm">
-                                        <button wire:click="updateQuantity('{{ $id }}', -1)" class="p-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 transition-colors focus:outline-none">
-                                            <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                                            </svg>
+                                    <div class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-1 border border-gray-200 dark:border-gray-700">
+                                        <button wire:click="updateQuantity('{{ $id }}', -1)" class="w-8 h-8 flex items-center justify-center bg-white dark:bg-gray-700 hover:bg-red-50 dark:hover:bg-red-900/30 text-gray-600 hover:text-red-600 dark:text-gray-300 rounded-md shadow-sm transition-all focus:outline-none font-black text-lg">
+                                            &minus;
                                         </button>
-                                        <input type="text" readonly value="{{ $item['quantity'] }}" class="w-12 text-center text-sm font-bold text-gray-700 dark:text-gray-200 border-none p-0 focus:ring-0 bg-white dark:bg-gray-800 h-full cursor-default">
-                                        <button wire:click="updateQuantity('{{ $id }}', 1)" class="p-2 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 transition-colors focus:outline-none">
-                                            <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                                            </svg>
+                                        <input type="text" readonly value="{{ $item['quantity'] }}" class="w-10 text-center text-sm font-black text-gray-900 dark:text-gray-100 border-none bg-transparent focus:ring-0 cursor-default p-0">
+                                        <button wire:click="updateQuantity('{{ $id }}', 1)" class="w-8 h-8 flex items-center justify-center bg-white dark:bg-gray-700 hover:bg-blue-50 dark:hover:bg-blue-900/30 text-gray-600 hover:text-blue-600 dark:text-gray-300 rounded-md shadow-sm transition-all focus:outline-none font-black text-lg">
+                                            &plus;
                                         </button>
                                     </div>
                                 </div>
@@ -451,8 +447,12 @@
                             <td class="px-6 py-3 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300 text-right font-mono">
                                 {{ number_format($item['price']) }}
                             </td>
-                            <td class="px-6 py-3 whitespace-nowrap text-sm text-blue-700 dark:text-blue-400 font-bold text-right font-mono bg-blue-50/40 dark:bg-blue-900/20">
-                                {{ number_format($item['price'] * $item['quantity']) }}
+                            <td class="px-6 py-3 whitespace-nowrap text-right">
+                                <div class="inline-block bg-blue-50/80 dark:bg-blue-900/30 px-3 py-1.5 rounded-lg border border-blue-100 dark:border-blue-800/50">
+                                    <span class="text-[15px] font-black text-blue-700 dark:text-blue-300 font-mono tracking-tight">
+                                        {{ number_format($item['price'] * $item['quantity']) }}
+                                    </span>
+                                </div>
                             </td>
                             <td class="px-6 py-3 whitespace-nowrap text-center">
                                 <button wire:click="removeFromCart('{{ $id }}')" class="text-red-400 hover:text-red-600 dark:hover:text-red-300 transition-colors p-1.5 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-full group">
@@ -479,17 +479,33 @@
             
             <!-- SUMMARY BAR -->
             @if(count($cart) > 0)
-            <div class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 p-4 md:p-6 flex flex-col md:flex-row justify-between items-center shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-20 shrink-0">
-                <div class="mb-4 md:mb-0">
-                    <p class="text-gray-500 dark:text-gray-400 text-sm font-bold uppercase tracking-wider mb-1">Total Belanja</p>
-                    <p class="text-3xl md:text-5xl font-black text-emerald-600 dark:text-emerald-400 leading-none tracking-tight">Rp {{ number_format($grandTotal) }}</p>
+            <div class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 p-4 md:p-6 flex flex-col md:flex-row justify-between items-center gap-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-20 shrink-0">
+                <!-- Kiri: Jumlah Produk -->
+                <div class="w-full md:w-1/3 flex justify-start">
+                    <div class="bg-blue-50 dark:bg-blue-900/30 px-5 py-3 rounded-xl border border-blue-100 dark:border-blue-800/50 flex flex-col justify-center">
+                        <p class="text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-wider mb-1">Jumlah Produk</p>
+                        <p class="text-2xl font-black text-blue-800 dark:text-blue-300 leading-none">
+                            {{ array_sum(array_column($cart, 'quantity')) }} <span class="text-sm font-semibold opacity-70">Item</span> 
+                            <span class="text-xs font-bold opacity-60 ml-1">({{ count($cart) }} Macam)</span>
+                        </p>
+                    </div>
                 </div>
-                <button wire:click="openPaymentModal()" class="w-full md:w-auto px-8 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 active:translate-y-0 active:scale-95 font-black text-xl flex items-center justify-center gap-3 group">
-                    <svg class="w-6 h-6 md:w-8 md:h-8 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                    BAYAR (ENTER)
-                </button>
+
+                <!-- Tengah: Total Belanja -->
+                <div class="w-full md:w-1/3 flex flex-col items-center justify-center">
+                    <p class="text-gray-500 dark:text-gray-400 text-sm font-bold uppercase tracking-wider mb-1">Total Belanja</p>
+                    <p class="text-3xl md:text-[2.75rem] font-black text-emerald-600 dark:text-emerald-400 leading-none tracking-tight">Rp {{ number_format($grandTotal) }}</p>
+                </div>
+
+                <!-- Kanan: Tombol Bayar -->
+                <div class="w-full md:w-1/3 flex justify-end">
+                    <button wire:click="openPaymentModal()" class="w-full md:w-auto px-10 py-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 active:translate-y-0 active:scale-95 font-black text-xl flex items-center justify-center gap-3 group">
+                        <svg class="w-6 h-6 md:w-7 md:h-7 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        BAYAR (ENTER)
+                    </button>
+                </div>
             </div>
             @endif
         </div>
