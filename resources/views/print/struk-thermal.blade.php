@@ -1,4 +1,5 @@
-<style>
+<div>
+    <style>
     @page {
         margin: 0;
         size: 80mm auto;

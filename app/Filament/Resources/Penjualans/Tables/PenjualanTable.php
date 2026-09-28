@@ -17,6 +17,7 @@ class PenjualanTable
     public static function table(Table $table): Table
     {
         return $table
+            ->recordAction(Tables\Actions\ViewAction::class)
             ->modifyQueryUsing(fn (Builder $query) => $query->with(['kasir', 'pelanggan', 'shift']))
             ->poll('3s') //hot reload data
             ->columns([
