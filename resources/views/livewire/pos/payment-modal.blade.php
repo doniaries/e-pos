@@ -64,9 +64,10 @@
             <!-- Total Belanja -->
             <div class="mb-3">
                 <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1.5">Jumlah Belanja</label>
-                <div class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 rounded-xl p-4 border-2 border-gray-200 dark:border-gray-700">
-                    <div class="text-4xl font-black text-gray-900 dark:text-white text-center tracking-tight">
-                        <span class="text-xl opacity-60 mr-1">Rp</span>{{ number_format($grandTotal) }}
+                <div class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 shadow-inner">
+                    <div class="text-[2.5rem] leading-none font-black text-gray-900 dark:text-white text-center tracking-tight flex items-center justify-center gap-1.5">
+                        <span class="text-2xl font-bold opacity-60 text-gray-500">Rp</span>
+                        <span>{{ number_format($grandTotal) }}</span>
                     </div>
                 </div>
             </div>
@@ -77,12 +78,12 @@
                     <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1.5">Tipe Konsumen</label>
                     <div class="grid grid-cols-2 gap-2">
                         <button wire:click="$set('customerType', 'umum')"
-                            class="px-5 py-3 text-base rounded-lg border-2 transition-all font-bold {{ $customerType === 'umum' ? 'bg-blue-50 border-blue-500 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300' : 'bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:border-gray-300' }}">
-                            👤 Umum
+                            class="px-5 py-3 text-base rounded-xl border-2 transition-all font-bold flex items-center justify-center gap-2 {{ $customerType === 'umum' ? 'bg-blue-50 border-blue-500 text-blue-700 shadow-sm shadow-blue-500/20 dark:bg-blue-900/40 dark:text-blue-300' : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50' }}">
+                            <span>👤</span> Umum
                         </button>
                         <button wire:click="$set('customerType', 'pelanggan')"
-                            class="px-5 py-3 text-base rounded-lg border-2 transition-all font-bold {{ $customerType === 'pelanggan' ? 'bg-blue-50 border-blue-500 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300' : 'bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:border-gray-300' }}">
-                            ⭐ Member
+                            class="px-5 py-3 text-base rounded-xl border-2 transition-all font-bold flex items-center justify-center gap-2 {{ $customerType === 'pelanggan' ? 'bg-blue-50 border-blue-500 text-blue-700 shadow-sm shadow-blue-500/20 dark:bg-blue-900/40 dark:text-blue-300' : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50' }}">
+                            <span>⭐</span> Member
                         </button>
                     </div>
                     @if ($customerType === 'pelanggan')
@@ -190,7 +191,7 @@
                         <div class="grid grid-cols-4 gap-2">
                             @foreach(['tunai' => '💵 Tunai', 'transfer' => '🏦 Transfer'] as $val => $label)
                             <button wire:click="$set('paymentMethod', '{{ $val }}')"
-                                class="px-4 py-3 text-base rounded-lg border-2 transition-all font-bold {{ $paymentMethod === $val ? 'bg-blue-50 border-blue-500 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300' : 'bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:border-gray-300' }}">
+                                class="px-4 py-3 text-base rounded-xl border-2 transition-all font-bold flex items-center justify-center gap-2 {{ $paymentMethod === $val ? 'bg-blue-50 border-blue-500 text-blue-700 shadow-sm shadow-blue-500/20 dark:bg-blue-900/40 dark:text-blue-300' : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50' }}">
                                 {{ $label }}
                             </button>
                             @endforeach
@@ -235,7 +236,7 @@
                     <div class="grid grid-cols-4 gap-2">
                         @foreach(['tunai' => '💵 Tunai', 'transfer' => '🏦 Transfer'] as $val => $label)
                         <button wire:click="$set('paymentMethod', '{{ $val }}')"
-                            class="px-4 py-3 text-base rounded-lg border-2 transition-all font-bold {{ $paymentMethod === $val ? 'bg-blue-50 border-blue-500 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300' : 'bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:border-gray-300' }}">
+                            class="px-4 py-3 text-base rounded-xl border-2 transition-all font-bold flex items-center justify-center gap-2 {{ $paymentMethod === $val ? 'bg-blue-50 border-blue-500 text-blue-700 shadow-sm shadow-blue-500/20 dark:bg-blue-900/40 dark:text-blue-300' : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50' }}">
                             {{ $label }}
                         </button>
                         @endforeach
@@ -331,10 +332,15 @@
                 <!-- Kembalian -->
                 <div>
                     <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1.5">Kembalian</label>
-                    <div class="p-5 rounded-xl border-2 transition-all"
-                        :class="change < 0 ? 'bg-red-50 text-red-700 border-red-300 dark:bg-red-900/30 dark:text-red-300 dark:border-red-700' : 'bg-green-50 text-green-800 border-green-300 dark:bg-green-900/40 dark:text-green-300 dark:border-green-700'">
-                        <div class="text-xs font-bold opacity-70 mb-1.5" x-text="change < 0 ? '⚠️ KURANG BAYAR' : '✅ KEMBALI'"></div>
-                        <div class="text-3xl font-black tracking-tight" x-text="'Rp ' + formatNumber(Math.abs(change))"></div>
+                    <div class="p-5 rounded-xl border-2 transition-all flex flex-col justify-center h-[calc(100%-1.5rem)]"
+                        :class="change < 0 ? 'bg-red-50 text-red-700 border-red-300 dark:bg-red-900/30 dark:text-red-300 dark:border-red-700 shadow-sm' : 'bg-green-50 text-green-800 border-green-300 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700 shadow-sm'">
+                        <div class="text-xs font-bold opacity-70 mb-1 flex items-center gap-1.5 uppercase tracking-wide">
+                            <span x-text="change < 0 ? '⚠️ Kurang Bayar' : '✅ Kembalian'"></span>
+                        </div>
+                        <div class="flex items-baseline gap-1.5">
+                            <span class="text-xl font-bold opacity-70">Rp</span>
+                            <span class="text-[2.5rem] leading-none font-black tracking-tight" x-text="formatNumber(Math.abs(change))"></span>
+                        </div>
                     </div>
                 </div>
             </div>
