@@ -9,6 +9,7 @@ use Filament\Tables\Table;
 use Filament\Tables\Columns;
 use Filament\Tables\Actions;
 use Filament\Tables\Filters;
+use App\Models\Setting;
 
 class SettingTable
 {
