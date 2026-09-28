@@ -74,20 +74,10 @@ class SettingResource extends Resource
 
                 Components\Section::make('Pengaturan Printer')
                     ->schema([
-                        Components\TextEntry::make('printer_tipe')
-                            ->label('Tipe Printer')
-                            ->badge(),
                         Components\TextEntry::make('printer_lebar_kertas')
                             ->label('Lebar Kertas')
-                            ->visible(fn($record) => $record->printer_tipe === 'thermal'),
-                        Components\TextEntry::make('printer_koneksi')
-                            ->label('Metode Koneksi')
                             ->badge()
-                            ->color('warning'), // Always USB now
-                        Components\TextEntry::make('printer_nama')
-                            ->label('Nama Printer')
-                            ->default('-'),
-                        // Removed Auto Cetak display
+                            ->color('info'),
                         Components\TextEntry::make('printer_footer')
                             ->label('Footer Struk')
                             ->columnSpanFull()
