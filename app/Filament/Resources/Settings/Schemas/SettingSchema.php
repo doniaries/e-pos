@@ -38,25 +38,6 @@ class SettingSchema
                             ])
                             ->required(),
                     ])->columns(2),
-
-                    Forms\Components\Section::make('Informasi Aplikasi')->schema([
-                        Forms\Components\TextInput::make('nama_aplikasi')
-                            ->label('Nama Aplikasi')
-                            ->required()
-                            ->maxLength(255),
-                        Forms\Components\TextInput::make('version')
-                            ->label('Versi')
-                            ->required()
-                            ->maxLength(255),
-                        Forms\Components\TextInput::make('pembuat')
-                            ->label('Pembuat')
-                            ->required()
-                            ->maxLength(255),
-                        Forms\Components\TextInput::make('tahun')
-                            ->label('Tahun')
-                            ->required()
-                            ->maxLength(255),
-                    ])->columns(2),
                 ])->columnSpan(['sm' => 3, 'md' => 2]),
 
                 Forms\Components\Group::make()->schema([
