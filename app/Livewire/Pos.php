@@ -289,6 +289,7 @@ class Pos extends Component
         }
 
         // Check for unclosed transactions from previous days
+        /* SEMENTARA DIDISABLE UNTUK TESTING
         $oldUnclosedTransactions = Penjualan::whereNull('laporan_harian_id')
             ->where('status', 'selesai')
             ->where('created_at', '<', today())
@@ -298,6 +299,7 @@ class Pos extends Component
             $this->showWarningOldTransactions = true;
             Log::warning('POS: Found old unclosed transactions from previous days.'); // Added logging
         }
+        */
 
         // No longer need to pre-load products into public property
 
