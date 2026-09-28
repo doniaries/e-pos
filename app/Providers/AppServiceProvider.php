@@ -32,5 +32,10 @@ class AppServiceProvider extends ServiceProvider
         \App\Models\Stok::observe(\App\Observers\StokObserver::class);
         \App\Models\PembelianDetail::observe(\App\Observers\PembelianDetailObserver::class);
         \App\Models\Penjualan::observe(\App\Observers\PenjualanObserver::class);
+
+        // Bypass all permission checks for super_admin
+        \Illuminate\Support\Facades\Gate::before(function ($user, $ability) {
+            return $user->hasRole('super_admin') ? true : null;
+        });
     }
 }
