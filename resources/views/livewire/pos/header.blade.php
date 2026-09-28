@@ -1,10 +1,10 @@
 <div class="bg-gradient-to-r from-blue-600 to-indigo-600 border-b border-blue-500 px-4 md:px-6 py-2 md:py-3 flex justify-between items-center shadow-lg h-[50px] md:h-[60px] z-30 relative transition-colors duration-300">
     <!-- Left: App Name + Printer Switch -->
     <div class="flex-shrink-0 flex items-center gap-2 md:gap-4">
-        @php $app = \App\Models\Setting::first(); @endphp
+        @php $appInfo = \App\Models\AppInfo::first(); @endphp
         <div class="flex items-center gap-2 md:gap-3">
             <!-- App Name -->
-            <h1 class="text-base md:text-xl font-black text-white tracking-wider md:tracking-widest uppercase truncate max-w-[80px] md:max-w-none">{{ $app->nama_aplikasi ?? 'POS' }}</h1>
+            <h1 class="text-base md:text-xl font-black text-white tracking-wider md:tracking-widest uppercase truncate max-w-[80px] md:max-w-none">{{ $appInfo->nama_aplikasi ?? 'POS' }}</h1>
 
             <!-- Printer Mode Toggle & Status -->
             <div class="flex items-center bg-white/10 rounded-lg p-0.5 md:p-1 border border-white/10 backdrop-blur-sm shadow-sm transition-all duration-300"
