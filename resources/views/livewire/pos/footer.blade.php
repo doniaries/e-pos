@@ -175,12 +175,12 @@
 
     <!-- App Info -->
     <div class="flex items-center gap-3 text-[9px] md:text-[10px] font-bold text-slate-500">
-        @php $app = \App\Models\Setting::first(); @endphp
+        @php $appInfo = \App\Models\AppInfo::first(); @endphp
         <span class="bg-slate-800/50 px-2 py-0.5 rounded border border-slate-700/50">
-            {{ $app->nama_aplikasi ?? 'POS App' }} v{{ $app->version ?? '1.2' }}
+            {{ $appInfo->nama_aplikasi ?? 'POS App' }} v{{ $appInfo->version ?? '1.2' }}
         </span>
-        <span class="hidden lg:inline whitespace-nowrap">© {{ $app->tahun ?? date('Y') }}
-            {{ $app->pembuat ?? 'Don Borland' }}</span>
+        <span class="hidden lg:inline whitespace-nowrap">© {{ $appInfo->tahun ?? date('Y') }}
+            {{ $appInfo->pembuat ?? 'Don Borland' }}</span>
     </div>
 
     <script>
